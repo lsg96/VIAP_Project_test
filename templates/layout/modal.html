@@ -1,0 +1,60 @@
+<!--로그인 모달-->
+
+<div id="loginmodal" class="modal" data-bs-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">로그인</h5>
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal" >닫기</button>
+<!--                      aria-label="Close"//시각장애인한테 글자 읽어줄수 있게 만들어주는 기능-->
+          </div>
+
+          <div class="modal-body">
+                <form id="loginfrm" name="loginfrm" method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="userid" class="col-form-label col-3 text-end text-danger">아이디</label>
+                        <div class="col-8">
+                        <input type="text" name="userid"  id="muserid" class="form-control border-danger">
+                        </div><!--usierid-->
+                    </div>
+                     <div class="row mb-3">
+                        <label for="passwd" class="col-form-label col-3 text-end text-danger">비밀번호</label>
+                        <div class="col-8">
+                        <input type="text" name="passwd" id="mpasswd" class="form-control border-danger">
+                    </div><!--passwd-->
+                    </div>
+                    <div class="row">
+                        <label class="col-3"></label>
+                        <div class="col-8">
+                            <input type="checkbox" name="autolgn" class="form-check-input">
+                            <label class="form-check-label text-warning">로그인 상태 유지</label>
+                        </div>
+                    </div><!--ligin state-->
+
+
+                </form>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="loginbtn">로그인</button>
+            <button type="button" class="btn btn-warning text-white">아이디/비밀번호 찾기</button>
+
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" id="loginbtn">구글로 로그인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+ </div>
+{##}
+{#{% block script %}#}
+{#    <script>#}
+{#        const loginbtn= document.querySelector('#loginbtn');#}
+{#        loginbtn.addEventListener('click', ()=>{#}
+{#            document.loginfrm.action ='{% url 'loginfail' %}';#}
+{#        })#}
+{#    </script>#}
+{#{% endblock %}#}
+

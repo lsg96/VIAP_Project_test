@@ -1,0 +1,39 @@
+
+
+
+
+<nav class="nav navbar-expand bg-success text-white justify-content-end fw-bold">
+    <ul class="navbar-nav nav-fill w-50 fs-5 " >
+        <li class="nav-item dropdown" >
+            <a class="nav-link dropmenu fs-5"href="{% url 'intro' %}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fs-5" href="#">회사소개</a></li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle fs-5" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            자동차 검사
+          </a>
+          <ul class="dropdown-menu text-center bg-success fs-6" style="width: 100% " aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_check' %}">픽업</a></li>
+            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_delivery' %}">검사소 찾기</a></li>
+            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_confirm' %}">예약 확인 및 취소</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle fs-5" href="#" id="navbarDarkDropdownMenuLink"  data-bs-toggle="dropdown" aria-expanded="false">
+            커뮤니티
+          </a>
+          <ul class="dropdown-menu text-center  bg-success opacity-75 fs-6" style="width: 100%; "  aria-labelledby="navbarDropdownMenuLink" >
+            <li><a class="dropdown-item text-white opacity-100 fw-bold " href="{% url 'information' %}">information</a></li>
+              <li><a class="dropdown-item text-white  opacity-100  fw-bold" href="{% url 'faq' %}">FAQ</a></li>
+            <li><a class="dropdown-item text-white  opacity-100  fw-bold" href="{% url 'review' %}">이용후기</a></li>
+          </ul>
+
+
+        {#나중에 관리자 계정만 접속이 가능하게 할 예정입니다. #}
+        <li class="nav-item">
+            <a class="nav-link fs-5" href="{% url 'admin' %}">관리자</a></li>
+    </ul>
+</nav>

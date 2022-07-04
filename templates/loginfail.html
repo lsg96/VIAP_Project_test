@@ -1,0 +1,21 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+    <div id="main">
+        <div class="text-center ">
+            <div>
+                <i class="bi bi-x-circle-fill text-danger " style="font-size: 10rem"></i>
+                <div class="display-2 text-black-50 mt-2"><span class="text-black fw-bold">로그인</span>을 실패하였습니다.</div>
+                <div class="text-black-50 fw-bold fs-5 mt-5">아이디와 비밀번호를 다시 한번 확인하셔서 로그인 해주세요</div>
+            </div><!--//message-->
+        </div>   <!-- // complete-->
+    </div><!--main-->
+
+{% endblock %}
+
+

@@ -1,0 +1,67 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block title %}프로젝트 소개{% endblock %}
+{% block style %}
+    <style>
+      #carousel02 { position: relative;
+           height: 299px; overflow: hidden ; margin-top:50px; margin-bottom: 50px; }
+        /* 캐러셀 전체 영역 지정 */
+
+        #carousel02 ul { display: flex ;
+        flex-direction: row-reverse}
+        /*  */
+    </style>
+
+{% endblock %}
+{% block content %}
+        <div id="main">
+            <div class="text-center ">
+                <div id="carousel02" class="w-100">
+                    <ul>
+                        {#슬라이드 베너  #}
+                        <li><a href="{% url 'agree' %}"><img src={% static "imgs/slide1.png "%}></a></li>
+                        <li><img src={% static "imgs/slide2.png" %}></li>
+                        <li><img src={% static "imgs/slide3.png" %}></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="fs-1 text-primary fw-bold fst-italic mt-2">가장 쉬운 자동차 검사 예약 웹페이지 </div>
+                    <div class="text-black-50 fw-bold fs-5 mt-5">아이디와 비밀번호를 다시 한번 확인하셔서 로그인 해주세요</div>
+                </div><!--//message-->
+                <form style="background: silver; margin: 0 20%" class="mt-5 p-4">
+                    <div style="padding: 2% 0">
+                        <button type="button" class="btn btn-success" id="nochk"><i class="bi bi-x"></i> 내 자동차검사 대행비용은?</button>
+                        <button type="button" class="btn btn-primary ms-5" id="okchk"><i class="bi bi-check"></i> 자동차검사소 방문예약</button>
+                    </div><!--//buttons-->
+                </form>
+                <p class="w-100"><img src={% static "imgs/home_city.PNG" %}></p>
+                <p class="w-100"><img src={% static "imgs/sido_gugun_select.PNG" %}></p>
+                <p class="w-100"><img src={% static "imgs/home_hugi.png" %}></p>
+
+            </div>   <!-- // complete-->
+        </div><!--main-->
+{% endblock %}
+{% block script %}
+     <script>
+                let ul = document.querySelector('#carousel02 ul');
+
+                //슬라이드 이미지들을 한줄로 이어붙이기 위해 너비 재조정
+                let moveleftAnimate = ul.animate([
+                    {transform: 'translateX(0px)', offset: 0.5},
+                    {transform: 'translateX(1200px)'}],
+                    {duration: 5000});
+                //5초동안 슬라이드 전환:4.25동안 0px 이동(이미지 고정)
+                //                      0,75초 동안 1200px이동 (이미지 이동)
+
+                moveleftAnimate.onfinish = () => {
+                    let removeItem = ul.removeChild(ul.firstElementChild);
+                    ul.appendChild(removeItem);
+                    moveleftAnimate.play();
+                };
+                //슬라이드 애니메이션이 끝나면
+                //맨앞으로 이동된 슬라이드는 다시 맨뒤로 보내고
+                //애니매이션을 다시 재생함
+
+     </script>
+{% endblock %}
+
