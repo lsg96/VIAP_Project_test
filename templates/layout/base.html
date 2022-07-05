@@ -25,10 +25,6 @@
             <h1><a href="{% url 'index' %}"><img src={% static "imgs/logo.png" %}></a></h1>
             <h1>
                 {% if not request.session.userinfo %}
-{#                <button type="button" class="btn btn-primary fw-light fs-5"#}
-{#                data-bs-toggle="modal" data-bs-target="#loginmodal">로그인</button>#}
-{#                <button type="button" class="btn btn-success"><a   class="text-white"style=" text-decoration-line: none" href="{% url 'agree' %}"> 회원가입 </a></button>#}
-{#              <button type="button" class="btn btn-dark"><a   class="text-white"style=" text-decoration-line: none" href="#"> 고객문의 </a></button>#}
                 <div class="d-flex fs-5 mt-4 ">
                     <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none"  data-bs-toggle="modal" data-bs-target="#loginmodal" href="#">로그인</a></p>
                     <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>

@@ -38,6 +38,7 @@ class LoginView(View):
         #select from Member where userid=** and passwd=**
         returnPage = '/loginfail'
         # count = Member.objects.filter(userid= form['userid'], passwd=form['passwd']).count();
+        from join.models import Member
         isExisted = Member.objects.filter(userid= form['userid'], passwd=form['passwd']).exists();
         # print(count)
 
