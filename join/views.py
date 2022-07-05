@@ -2,7 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-import requests
+import request
 # Create your views here.
 from django.views import View
 from django.core import serializers
@@ -30,7 +30,7 @@ class CheckmeView(View):
         #구글 recaptcha 인증사이트에 키들을 질의문자열로 보내어
         #올바른 키인지 확인하고 결과를 json으로 받아옴
         #requests.get(URL,질의문자열)
-        result = requests.get(VERIFY_URL, params=params).json()
+        result = request.get(VERIFY_URL, params=params).json()
 
         #결과중 success가 true면 joinme로 redirect
         if result['success']:
