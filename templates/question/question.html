@@ -1,0 +1,136 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block style %}
+    <style>
+        div label:first-child{font-weight: bold}
+
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div class="card card-body bg-light">
+    <div class="d-flex">
+                 <form name="quefrm" method="post">
+                {% csrf_token %}
+                <h2>고객문의 접수</h2>
+                <div class="row mt-5">
+                    <label for="qname" class="col-form-label col-2 text-end ">이름</label>
+                    <div class="col-5">
+                        <input type="text" name="qname" id="qname" class="form-control" >
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qphone" class="col-form-label col-2 text-end ">전화번호</label>
+                    <div class="col-5">
+                        <input type="text" name="qphone" id="qphone" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qemail" class="col-form-label col-2 text-end ">이메일</label>
+                    <div class="col-5">
+                        <input type="text" name="qemail" id="qemail" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qselect" class="col-form-label col-2 text-end ">분류</label>
+                    <div class="col-3 d-flex flex-row">
+                        <select class="form-select w-auto" id="qselect" name="qselect">
+                            <option>선택하세요</option>
+                            <option>개인고객 서비스 문의</option>
+                            <option>기업고객 서비스 문의</option>
+                            <option>제휴협력 문의</option>
+                            <option>기타</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qsubject" class="col-form-label col-2 text-end ">제목</label>
+                    <div class="col-10">
+                        <input type="text" id="qsubject" name="qsubject" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qtext" class="col-form-label col-2 text-end ">내용</label>
+                    <div class="col-3">
+                        <textarea class="form-control" style="width: 500px; height: 200px" name="qtext" id="qtext" ></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="qfile" class="col-form-label col-2 text-end">첨부 파일</label>
+                    <div class="col-3">
+                        <input type="file" name="qfile" id="qfile">
+                    </div>
+                </div>
+
+            </form>
+        <div><img src="{% static '/imgs/q7.png' %}" style="width: 90%; margin: 20%"></div>
+    </div>
+        <div class="text-center">
+                        <button type="button" class="btn btn-primary" id="qbtn">
+                            <i class="bi bi-check"></i> 문의 접수하기</button>
+        </div>
+    </div>
+    <div id="qsub" class="mt-5">
+        <div class="row list">
+            <div class="col-sm-4 text-center">
+                <img src="{% static '/imgs/q1.PNG' %}">
+                <h2><a href="#" data-bs-toggle="modal" data-bs-target="#qmodal" class="text-dark text-decoration-none">실시간 채팅</a></h2>
+                <p>컴퓨터, 스마트폰을 이용해 상담원과 즉시 상담이 가능합니다. 퇴근 후 약속이 없는 직원이 업무시간 외에도 상담을 진행해드릴 수도 있습니다. 연락처를 남겨주시면 가능한 시간대에 상담을 진행해드립니다.</p>
+
+            </div>
+            <div class="col-sm-4 text-center mt-2">
+                <img src="{% static '/imgs/q2.PNG' %}">
+                <h2>전화문의</h2>
+                <p>가장 많은 고객께서 이용하고 계신 방법이며, 이용고객이 많으시기 때문에 대기하실 수 있는 단점이 있습니다. 상담원의 목소리는 거칠 수 있음을 부디 양해바랍니다.</p>
+                <p class="fw-bold text-center">010-8781-9459</p>
+
+            </div>
+            <div class="col-sm-4 text-center">
+                <img src="{% static '/imgs/q3.PNG' %}">
+                <h2><a href="{% url 'faq' %}" class="text-dark text-decoration-none">FAQ</a></h2>
+                <p>많은 고객님께서 가장 자주 문의하시는 내용을 정리해두었습니다. 질문 전에 확인을 해보시는 것도 좋은 방법입니다. 지속적으로 업데이트가 될 수 있도록 많이 노력하고 있습니다.</p>
+
+            </div>
+            <div class="col-sm-4 mt-3 mb-5 text-center">
+                <img src="{% static '/imgs/q4.PNG' %}">
+                <h2>Social</h2>
+                <p>운영하는 블로그, SNS를 통해 케이엠디에스와 연결하실 수 있습니다. 응대시간이 길어질 수 있는 단점이 있습니다.</p>
+
+            </div>
+            <div class="col-sm-4 mt-5 text-center">
+                <img src="{% static '/imgs/q5.PNG' %}">
+                <h2>고객지원 포털</h2>
+                <p>서비스를 이용하신 고객을 대상으로 서비스를 제공할 계획입니다.
+                그 동안 고객님들께서 바라는 바를 남겨주신 내용을 토대로 만들어지고 있습니다.</p>
+
+            </div>
+            <div class="col-sm-4 mt-5 text-center">
+                <img src="{% static '/imgs/q6.PNG' %}">
+                <h2>1:1 고객지원</h2>
+                <p>서비스를 이용하신 고객을 대상으로 서비스를 제공할 계획입니다. 2020년 현재 여전히 계획을 가지고 있기만 한 상태입니다. 죄송합니다</p>
+
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% include 'question/qmodal.html' %}
+{% endblock %}
+{% block script %}
+    <script>
+        const qbtn =document.querySelector('#qbtn');
+        qbtn.addEventListener('click',()=>{
+           const frm=document.quefrm;
+           if(frm.qname.value =='') alert('이름을 작성하세요')
+           else if(frm.qphone.value =='') alert('전화번호를 작성하세요')
+           else if(frm.qemail.value =='') alert('이메일주소를 작성하세요')
+           else if(frm.qselect.value =='선택하세요') alert('분류를 선택하세요')
+           else if(frm.qsubject.value =='') alert('제목을 작성하세요')
+           else if(frm.qtext.value =='') alert('내용을 작성하세요')
+           else{
+                frm.submit();
+           }
+        });
+    </script>
+{% endblock %}
+

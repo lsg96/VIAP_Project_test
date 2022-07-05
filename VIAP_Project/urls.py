@@ -22,4 +22,6 @@ urlpatterns = [
     path('join/', include('join.urls')),
     path('check/', include('check.urls')),
     path('community/', include('community.urls')),
+    path('question/', include('question.urls')),
+
 ]

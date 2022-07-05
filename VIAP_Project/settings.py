@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'join.apps.JoinConfig',
     'home.apps.HomeConfig',
     'community.apps.CommunityConfig',
-    'check.apps.CheckConfig'
+    'check.apps.CheckConfig',
+    'question.apps.QuestionConfig'
 ]
 
 MIDDLEWARE = [

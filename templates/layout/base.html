@@ -30,7 +30,7 @@
                     <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
                     <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'agree' %}"> 회원가입&nbsp;</a></p>
                     <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
-                    <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="#"> 고객문의 </a></p>
+                    <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'question' %}"> 고객문의 </a></p>
                 </div>
                 {% endif %}
 
@@ -53,7 +53,7 @@
     {% include 'layout/modal.html' %}
 
     <script src="{% static '/js/vendor/bs5/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static '/js//webproject.js' %}"></script>
+    <script src="{% static '/js/webproject.js' %}"></script>
     {% block script %}{% endblock %}
 </body>
 </html>

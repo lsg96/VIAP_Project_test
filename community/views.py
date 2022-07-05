@@ -26,3 +26,4 @@ class ReviewView(View):
 
     def post(self, request):
         pass
+
