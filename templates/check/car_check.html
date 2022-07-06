@@ -1,14 +1,88 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 {% block content %}
- <div class="text-center ">
-      <img src="/static/imgs/check0_1.png">
-      <img src="/static/imgs/check1.png">
-      <img src="/static/imgs/check2.png">
-      <img src="/static/imgs/check7.png">
-      <img src="/static/imgs/check4.png">
-      <img src="/static/imgs/check5.png">
-      <img src="/static/imgs/check6.png">
-     </div>
+    <div id="googleMap" style="width: 700px;height: 700px; border:1px solid yellow;
+    float: right;"></div>
+
+    <button type="button" id="seoulbtn" class="btn btn-primary">서울</button>
+    <button type="button" id="gyeonggibtn" class="btn btn-primary">경기</button>
+    <button type="button" id="incheonbtn" class="btn btn-primary">인천</button>
+    <button type="button" id="daegubtn" class="btn btn-primary">대구</button>
+    <button type="button" id="gwangjubtn" class="btn btn-primary">광주</button>
+    <button type="button" id="daejeonbtn" class="btn btn-primary">대전</button>
+    <button type="button" id="ulsanbtn" class="btn btn-primary">울산</button>
+    <button type="button" id="gangwonbtn" class="btn btn-primary">강원</button>
+    <button type="button" id="chungbugbtn" class="btn btn-primary">충북</button>
+    <button type="button" id="chungnambtn" class="btn btn-primary">충남</button>
+    <button type="button" id="jeonbugbtn" class="btn btn-primary">전북</button>
+    <button type="button" id="gyeongbugbtn" class="btn btn-primary">경북</button>
+    <button type="button" id="gyeongnambtn" class="btn btn-primary">경남</button>
+    <button type="button" id="busanbtn" class="btn btn-danger">부산</button>
+
+
+    <div class="text-center ">
+        <img src="/static/imgs/check0_1.png">
+        <img src="/static/imgs/check1.png">
+        <img src="/static/imgs/check2.png">
+        <img src="/static/imgs/check7.png">
+        <img src="/static/imgs/check4.png">
+        <img src="/static/imgs/check5.png">
+        <img src="/static/imgs/check6.png">
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        var map;
+        var busanbtn = document.getElementById('busanbtn');
+        busanbtn.addEventListener('click', changeToBusan);
+
+        var seoulbtn = document.getElementById('seoulbtn');
+        seoulbtn.addEventListener('click', changeToSeoul);
+
+       function myMap(){
+          var mapOptions = {
+                center:new google.maps.LatLng(37.5666805, 126.9784147),
+                zoom:10
+            };
+
+          map = new google.maps.Map(
+                 document.getElementById("googleMap")
+                , mapOptions )
+            };
+
+       function changeToSeoul() {
+           var seoul = new google.maps.LatLng(37.5666805, 126.9784147);
+           map.panTo(seoul);
+           map.setZoom(12);
+
+           new google.maps.Marker({
+               position: new google.maps.LatLng(37.660659, 127.043226),
+               map: map,
+               label: "한양자동차정비"
+           });
+       };
+
+       function changeToBusan() {
+           var busan = new google.maps.LatLng(35.1795543, 129.0756416);
+           map.panTo(busan);
+           map.setZoom(12);
+
+           new google.maps.Marker({
+               position: new google.maps.LatLng(35.151057, 128.974180),
+               map: map,
+               label: "동방정비"
+           });
+       };
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00YznqL7pofuUfsPeaWI3JSwA33ftGvY&callback=myMap&region=kr"></script>
+
+
+
+
 {% endblock %}
 
