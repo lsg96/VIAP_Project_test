@@ -1,11 +1,10 @@
 import json
 
+from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-import request
 # Create your views here.
 from django.views import View
-from django.core import serializers
 
 from join.models import Zipcode, Member
 

@@ -11,10 +11,12 @@
             </div>
 
             <div class="display-4 text-black-50 mt-5 mb-5">
-                <div class="m-3">이름 : ??? </div>
-                <div class="m-3">전화번호 : ???</div>
-                <div class="m-3">이메일 : ???@?????.???</div>
-                <div class="m-3">문의분류 : ??????</div>
+                <div class="m-5">접수 된 정보를 확인해주세요. </div>
+                <div class="m-3">이름 : {{ q.qname }} </div>
+                <div class="m-3">전화번호 : {{ q.qphone }}</div>
+                <div class="m-3">이메일 : {{ q.qemail }}</div>
+                <div class="m-3">문의분류 : {{ q.qselect }}</div>
+                <div class="m-3">문의한 날짜 : {{ q.regdate }}</div>
             </div>
 
             <div class="mb-5">
