@@ -1,7 +1,22 @@
+{% load static %}
+<header class="d-flex justify-content-between">
+    <h1><a href="{% url 'index' %}"><img src={% static "imgs/logo.png" %}></a></h1>
+    <h1>
+        {% if not request.session.userinfo %}
+        <div class="d-flex fs-5 mt-4 ">
+            <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none"  data-bs-toggle="modal" data-bs-target="#loginmodal" href="#">로그인</a></p>
+            <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
+            <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'agree' %}"> 회원가입&nbsp;</a></p>
+            <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
+            <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'question' %}"> 고객문의 </a></p>
+        </div>
+        {% endif %}
 
-
-
-
+        {% if request.session.userinfo %}
+        <button type="button" class="btn btn-dark"id="logoutbtn">로그아웃</button>
+        {% endif %}
+    </h1>
+</header><!--header-->
 <nav class="nav navbar-expand bg-success text-white justify-content-end fw-bold">
     <ul class="navbar-nav nav-fill w-50 fs-5 " >
         <li class="nav-item dropdown" >
@@ -15,9 +30,11 @@
             자동차 검사
           </a>
           <ul class="dropdown-menu text-center bg-success fs-6" style="width: 100% " aria-labelledby="navbarDarkDropdownMenuLink">
-            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_check' %}">픽업</a></li>
-            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_delivery' %}">검사소 찾기</a></li>
-            <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_confirm' %}">예약 확인 및 취소</a></li>
+              <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_delivery' %}">픽업</a></li>
+              <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_check' %}">검사소 찾기</a></li>
+              <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_confirm' %}">예약 확인 및 취소</a></li>
+              <li><a class="dropdown-item text-white fw-bold" href="{% url 'pickup' %}">픽업1</a></li>
+              <li><a class="dropdown-item text-white fw-bold" href="{% url 'car_info' %}">검사소 찾기1</a></li>
           </ul>
         </li>
 

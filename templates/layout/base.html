@@ -4,12 +4,14 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static '/css/vendor/bs5/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="{% static '/css/webproject.css' %}">
+
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <title>{% block title %}{% endblock %}</title>
+    {% block link %}{% endblock %}
     <style>
         .dropdown:hover>.dropdown-menu{
 		display: block;
@@ -20,40 +22,21 @@
 </head>
 <body>
     <div class="container">
-
-       <header class="d-flex justify-content-between">
-            <h1><a href="{% url 'index' %}"><img src={% static "imgs/logo.png" %}></a></h1>
-            <h1>
-                {% if not request.session.userinfo %}
-                <div class="d-flex fs-5 mt-4 ">
-                    <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none"  data-bs-toggle="modal" data-bs-target="#loginmodal" href="#">로그인</a></p>
-                    <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
-                    <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'agree' %}"> 회원가입&nbsp;</a></p>
-                    <p class="">&nbsp;&nbsp; / &nbsp;&nbsp;</p>
-                    <p><a class=" fw-light text-dark fw-bold" style=" text-decoration-line: none" href="{% url 'question' %}"> 고객문의 </a></p>
-                </div>
-                {% endif %}
-
-                {% if request.session.userinfo %}
-                <button type="button" class="btn btn-dark"id="logoutbtn">로그아웃</button>
-                {% endif %}
-            </h1>
-        </header><!--header-->
-
-
-       {% include 'layout/header.html' %}
+        {% include 'layout/header.html' %}
 
         {% block content %}{% endblock %}
 
-       {% include 'layout/footer.html' %}
+        {% include 'layout/footer.html' %}
 
     </div><!--container-->
 
     <!--로그인 모달-->
     {% include 'layout/modal.html' %}
 
+     <!-- Javascript Start -->
     <script src="{% static '/js/vendor/bs5/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static '/js/webproject.js' %}"></script>
+
     {% block script %}{% endblock %}
 </body>
 </html>
