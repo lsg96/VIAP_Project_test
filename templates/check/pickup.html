@@ -206,11 +206,12 @@
                         <div class="custom-form p-4 rounded border mt-5">
                             <div class="row " id="tsinfo_schedule">
                                 <div class="col-lg-12">
-                                    <div class="form-group">
+                                    <div class="form-group position-relative">
                                         <label class="text-dark small"><span class="text-danger">*</span> 픽업예약일 선택</label>
-                                        <div class="input-group mb-3 flatpickr">
-                                            <input type="text" id="schdate" name="schdate" data-input placeholder="여기를 클릭하세요"
-                                                   class="form-control bg-light dateSelector"  aria-describedby="btnschdate">
+                                        <div class="form-icon mb-3 position-relative flatpickr">
+                                            <i data-feather="calendar" class="fea icon-sm icons text-danger"></i>
+                                            <input type="text" id="schdate" name="schdate"  data-input placeholder="여기를 클릭하세요"
+                                                   class="form-control bg-light ps-5 dateSelector"  aria-describedby="btnschdate">
                                              <a class="input-button" title="toggle" data-toggle>
                                                     <i class="bi bi-calender"></i>
                                              </a>
@@ -228,17 +229,17 @@
                                     <div class="form-group position-relative">
                                         <label class="form-label"><span class="text-danger">*</span> 픽업시간</label>
                                         <div class="form-icon position-relative">
-                                        <i data-feather="clock" class="fea icon-sm icons text-danger"></i>
-                                        <input type="text" class="form-control pl-5 bg-light" placeholder=""  id="schtime_t" name="schtime_t" required=""readonly="">
+                                        <i data-feather="clock" class="fea icon-sm icons text-danger "></i>
+                                        <input type="text" class="form-control ps-5 bg-light" id="timeSelector" name="timeSelector" placeholder="픽업가능사간: 08:00 ~ 17:00" readonly="">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 mt-3">
                                     <div class="form-group position-relative">
                                         <label  class="form-label"><span class="text-danger">*</span> 담당 대행원</label>
                                         <div class="form-icon position-relative">
                                         <i class="mdi mdi-hail icons text-danger"></i>
-                                        <input type="text" class="form-control pl-5 bg-light" placeholder=""  id="cuname" name="cuname" required=""readonly="">
+                                        <input type="text" class="form-control ps-5 bg-light" placeholder=""  id="cuname" name="cuname" required=""readonly="">
                                         </div>
                                     </div>
                                 </div>
@@ -1562,12 +1563,6 @@
     <script src="{% static '/js/jquery.twentytwenty.js' %}"></script>
     <!-- Main Js -->
     <script src="{% static '/js/app.js' %}"></script>
-    <!-- Plugin JS file -->
-    <script src="{% static '/plugins/datepicker-in-fullscreen/components/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
-    <script src="{% static '/plugins/datepicker-in-fullscreen/components/bootstrap-datepicker/locales/bootstrap-datepicker.ko.min.js' %}"></script> <!-- spanish language (es) -->
-    <script src="{% static '/plugins/datepicker-in-fullscreen/components/moment/moment.min.js' %}"></script>
-    <script src="{% static '/plugins/datepicker-in-fullscreen/components/TouchSwipe/jquery.touchSwipe.min.js' %}"></script> <!-- Only if touchswipe is enabled -->
-    <script src="{% static '/plugins/datepicker-in-fullscreen/datepicker-in-fullscreen.js' %}"></script>
 	<!-- mias JavaScripts	============================================= -->
 	<script src="{% static '/js/viap/jquery.form.js' %}" type="text/javascript"></script>
 	<script src="{% static '/js/viap/common.js' %}"></script>
@@ -1591,15 +1586,31 @@
 
 	<script>
         // flatpickr
-        var dateSelector = document.querySelector('.dateSelector');
-
         flatpickr.localize(flatpickr.l10ns.ko);
         flatpickr(dateSelector);
         dateSelector.flatpickr({
             local: 'ko',
-            {#wrap: true,#}
+            disable: [
+                function(date) {
+                    // return true to disable
+                    return (date.getDay() === 0 || date.getDay() === 6);
+                }
+            ],
+
         });
 
+
+
+        flatpickr.localize(flatpickr.l10ns.ko);
+        flatpickr(timeSelector);
+        timeSelector.flatpickr({
+            local: 'ko',
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            minTime: "08:00",
+            maxTime: "17:00",
+        });
         // Mias 스크립트
 
         daumPostcode.addEventListener('click', ()=>{
@@ -1651,7 +1662,9 @@
         let expdate = '';
         let tscarname = '';
         let tsinsptype = '';
-
+        {#let tsresultfee = '';#}
+        {#let tsresultagfee = '';#}
+        {#let tsresultpay = '';#}
         loadTestInfo.addEventListener('click', () => {
             if (bymd.value.length != 6) {
                 alert('주민번호(생년월일) 앞 6자리를 입력하세요.\n※자동차가 법인소유이면 법인번호·개인사업자인 경우 사업자번호 앞6자리를 입력하세요.');
@@ -1661,11 +1674,11 @@
                 alert('자동차검사 정보조회를 위한 주의 사항을 읽으시고 동의가 필요합니다.\n동의를 하지 않는 경우에는 자동차검사 정보 조회가 되지 않습니다.')
                 return;
             } else if (roadaddr.value == '') {
-                alert('자동차 픽업주소를 선택해주세!')
+                alert('자동차 픽업주소를 선택해주세요!')
                 roadaddr.focus();
                 return;
             } else if (detailaddr.value == '') {
-                alert('자동차 픽업주소를 선택해주세!')
+                alert('자동차 픽업주소를 선택해주세요!')
                 detailaddr.focus();
                 return;
             }
@@ -1687,12 +1700,13 @@
                     gugun: gugun,
                     ro: ro,
                     etc: etc,
+                    detailaddr: detailaddr
                 }),
             }).then(response => response.json())
                 .then(text => tsCarInfo(text))
             .catch((error) => {
             console.error('실패:', error);
-            });
+            });     // 자동차 검사정보 데이터 Resquest 및 response
 
 
             // get 방식
@@ -1707,6 +1721,8 @@
             console.log(tsdata)
             console.log(tsdata.insptype)
             if (tsdata.insptype == 'Y') {
+
+
                 let md_expdate = tsdata.fdate + '~' + tsdata.edate;
                 let md_fdate = tsdata.fdate;
               //  console.log(tsdata)
@@ -1724,11 +1740,13 @@
             } else {
                  //  console.log(tsdata.insptype)
 
-
                 expdate = tsdata.fdate + '~' + tsdata.edate;
                 tsresult_car_name.innerHTML = tsdata.carname;
                 tsresult_test_type.innerHTML = tsdata.insptype;
                 tsresult_exp_date.innerHTML = expdate;
+                tsresultfee.innerHTML = tsdata.fee
+                tsresultagfee.innerHTML = tsdata.agentfee
+                tsresultpay.innerHTML = (parseInt(tsdata.fee) + parseInt(tsdata.agentfee)) * 1.1
 
                 tscarname = tsdata.carname;
                 tsinsptype = tsdata.insptype;
@@ -1738,33 +1756,58 @@
                 result_ts.setAttribute('style', 'display:block')
 
             }
+            btnRstvnApp.addEventListener('click', ()=>{
+                if (dateSelector.value =='') {
+                    alert('픽업일을 선택하세요!');
+                    dateSelector.focus();
+                    return;
+                } else if (timeSelector.value =='') {
+                    alert('픽업시간을 선택하세요!')
+                    timeSelector.focus();
+                    return;
+                } else if (username.value =='') {
+                    alert('신청인을 입력하세요!')
+                    username.focus();
+                    return;
+                } else if (tel1.value =='') {
+                    alert('신청인 휴대폰번호를 입력하세요!')
+                    tel1.focus();
+                    return;
+                } else if (subReqForm.termAllChk.checked == false) {
+                    if(subReqForm.userChk.checked == false || subReqForm.personalChk.checked == false) {
+                        alert('전체동의, 이용약관 동의 및 개인정보 수집 동의를 체크해주세요!')
+                        return;
+                    }
+                }
+
+
+                initData();
+
+                const csrftoken = getCookie('csrftoken');
+                console.log(csrftoken);
+
+                fetch('{% url "car_apply" %}', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        app_carno: carno.value,
+                        app_bymd: bymd.value,
+                        app_carname: tscarname,
+                        app_insptype: tsinsptype,
+                        app_expdate: expdate,
+                        app_name: username.value,
+                        app_tel1: tel1.value,
+                        app_tel2: tel2.value,
+                    }),
+                }).then(response => response.json())
+                    .then(text => conformResp(text))
+                    .catch((error) => {
+                        console.error('실패:', error);
+                    });
+            });     // 예약 신청 전송
+
          };     // 받은 차량정보에 따라 처리 알고리즘
 
-        btnRstvnApp.addEventListener('click', ()=>{
-            initData();
-
-            const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken);
-
-            fetch('{% url "car_apply" %}', {
-                method: 'POST',
-                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    app_carno: carno.value,
-                    app_bymd: bymd.value,
-                    app_carname: tscarname,
-                    app_insptype: tsinsptype,
-                    app_expdate: expdate,
-                    app_name: username.value,
-                    app_tel1: tel1.value,
-                    app_tel2: tel2.value,
-                }),
-            }).then(response => response.json())
-                .then(text => conformResp(text))
-            .catch((error) => {
-            console.error('실패:', error);
-            });
-        });     // 예약 신청 전송
         const conformResp = (tpdata) => {
             console.log(tpdata.cfmchk)
             if (tpdata.cfmchk == 'Y') {

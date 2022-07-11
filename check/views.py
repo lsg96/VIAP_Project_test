@@ -10,6 +10,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Create your views here.
 from django.views import View
 
+from check.models import InspFee, Agent
+
+
 class Car_deliveryView(View):
     def get(self, request):
         return render(request, 'check/car_delivery.html')
@@ -42,7 +45,6 @@ class PickupView(View):
     def post(self, request):
         # json으로 넘겨서 json으로 받아야 함
         form = json.loads(request.body)
-
         print('ppp', )
         print(form)
 
@@ -53,7 +55,7 @@ class PickupView(View):
         except:
             isError = 'Y'
 
-        # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
+        # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request.body)
 
         carno = '28어8354'
         # insptype = 'N'
@@ -61,12 +63,21 @@ class PickupView(View):
         fdate = '2022-07-01'
         edate = '2022-09-01'
         carname = '아반떼'
+        agentfee = '15000'
+
+        # 검사료 조회: 차명이로 향후 배기량으로 설정
+        pf = InspFee.objects.get(insptype=insptype, carname=carname)
+        print(pf.fee)
+        # 검사대행원 매치
+        pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
+        print(pa[0].agentname)
 
         if isError == 'Y':
             return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
         elif isError == 'N':
 
-            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname}
+            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'pa': pa}
+
             print(context)
 
             return HttpResponse(json.dumps(context), content_type='application/json')
@@ -169,7 +180,7 @@ class Car_infoView(View):
         except:
             isError = 'Y'
 
-        carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
+        # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
 
         carno = '28어8354'
         # insptype = 'N'
