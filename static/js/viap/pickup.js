@@ -21,6 +21,7 @@ const tsresultfee = document.querySelector('#tsresult_cost_1')
 const tsresultagfee = document.querySelector('#tsresult_cost_2')
 const tsresultpay = document.querySelector('#tsresult_payment')
 const result_ts = document.querySelector('#result_ts')
+const agentlist = document.querySelector('#agentlist')
 
 // 검사대상이 아닐때
 const carname_alt = document.querySelector('#carname_alert_display');

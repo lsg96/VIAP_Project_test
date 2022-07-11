@@ -239,7 +239,11 @@
                                         <label  class="form-label"><span class="text-danger">*</span> 담당 대행원</label>
                                         <div class="form-icon position-relative">
                                         <i class="mdi mdi-hail icons text-danger"></i>
-                                        <input type="text" class="form-control ps-5 bg-light" placeholder=""  id="cuname" name="cuname" required=""readonly="">
+{#                                        <input type="text" class="form-control ps-5 bg-light" placeholder=""  id="cuname" name="cuname" required=""readonly="">#}
+                                        <select class="form-select ps-5" id="agentlist"  aria-label="Default select example">
+                                            <option selected class="form-control">대행원을 선택하세요.</option>
+
+                                        </select>
                                         </div>
                                     </div>
                                 </div>
@@ -1662,6 +1666,9 @@
         let expdate = '';
         let tscarname = '';
         let tsinsptype = '';
+        let opts = '';
+        let vals = '';
+        let seq = '';
         {#let tsresultfee = '';#}
         {#let tsresultagfee = '';#}
         {#let tsresultpay = '';#}
@@ -1738,8 +1745,6 @@
             } else if (tsdata.insptype == 'N'){
                 $('#alert-message-modal').modal('show');
             } else {
-                 //  console.log(tsdata.insptype)
-
                 expdate = tsdata.fdate + '~' + tsdata.edate;
                 tsresult_car_name.innerHTML = tsdata.carname;
                 tsresult_test_type.innerHTML = tsdata.insptype;
@@ -1751,11 +1756,26 @@
                 tscarname = tsdata.carname;
                 tsinsptype = tsdata.insptype;
 
-                console.log(expdate)
+                result_ts.setAttribute('style', 'display:block');
 
-                result_ts.setAttribute('style', 'display:block')
+                let opts = '';
+                let vals = '';
+                let seq = '';
 
+                let agents = JSON.parse(tsdata.json_pa);
+                console.log(agents);
+                agents.forEach((data, idx) => {
+                    vals = data.fields.agentname;
+                    seq = '&nbsp' + int(data.pk) + 1;
+
+                    opts += `<option value="${vals}${seq}">`;
+                    opts += vals;
+                    opts += '</option>';
+                });
+
+                agentlist.innerHTML = opts;
             }
+
             btnRstvnApp.addEventListener('click', ()=>{
                 if (dateSelector.value =='') {
                     alert('픽업일을 선택하세요!');

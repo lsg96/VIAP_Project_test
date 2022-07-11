@@ -1,4 +1,6 @@
 import json
+
+from django.core import serializers
 from django.http import HttpResponse, request
 from django.shortcuts import render
 
@@ -67,16 +69,18 @@ class PickupView(View):
 
         # 검사료 조회: 차명이로 향후 배기량으로 설정
         pf = InspFee.objects.get(insptype=insptype, carname=carname)
-        print(pf.fee)
+        # print(pf.fee)
         # 검사대행원 매치
         pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
-        print(pa[0].agentname)
+        # print(pa[0].agentname)
+        json_pa = serializers.serialize('json', pa)
+
 
         if isError == 'Y':
             return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
         elif isError == 'N':
 
-            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'pa': pa}
+            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'json_pa': json_pa}
 
             print(context)
 
