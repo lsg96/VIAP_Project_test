@@ -34,7 +34,7 @@ const tel1 = document.querySelector('#tel1');
 const tel2 = document.querySelector('#tel2');
 const btnRstvnApp = document.querySelector('#btnRstvnApp');
 
-// flatpickr
+// flatpickr(픽업)
 const dateSelector = document.querySelector('.dateSelector');
 const timeSelector = document.querySelector('#timeSelector');
 
@@ -56,6 +56,8 @@ let initData = ()=>{
 	let app_testype = '';
 	let app_expdate = '';
 	let app_name = '';
+	let addr1 = '';
+	let addr2 = '';
 	let app_tel1 = '';
 	let app_tel2 = '';
 };

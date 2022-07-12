@@ -242,7 +242,6 @@
 {#                                        <input type="text" class="form-control ps-5 bg-light" placeholder=""  id="cuname" name="cuname" required=""readonly="">#}
                                         <select class="form-select ps-5" id="agentlist"  aria-label="Default select example">
                                             <option selected class="form-control">대행원을 선택하세요.</option>
-
                                         </select>
                                         </div>
                                     </div>
@@ -1766,67 +1765,77 @@
                 console.log(agents);
                 agents.forEach((data, idx) => {
                     vals = data.fields.agentname;
-                    seq = '&nbsp' + int(data.pk) + 1;
+                    seq = '&nbsp' + (parseInt(data.pk) + 1);
 
                     opts += `<option value="${vals}${seq}">`;
                     opts += vals;
                     opts += '</option>';
                 });
+                opts = '<option selected class="form-control" value="">대행원을 선택하세요.</option>' + opts
+                console.log(opts)
+                agentlist.innerHTML = opts
+            }
+         };     // 받은 차량정보에 따라 처리 알고리즘
 
-                agentlist.innerHTML = opts;
+
+
+        btnRstvnApp.addEventListener('click', ()=>{
+            if (dateSelector.value =='') {
+                alert('픽업일을 선택하세요!');
+                dateSelector.focus();
+                return;
+            } else if (timeSelector.value =='') {
+                alert('픽업시간을 선택하세요!')
+                timeSelector.focus();
+                return;
+            }  else if (agentlist.value =='') {
+                alert('대행원을 선택하세요!')
+                timeSelector.focus();
+                return;
+            }   else if (username.value =='') {
+                alert('신청인을 입력하세요!')
+                username.focus();
+                return;
+            } else if (tel1.value =='') {
+                alert('신청인 휴대폰번호를 입력하세요!')
+                tel1.focus();
+                return;
+            } else if (subReqForm.termAllChk.checked == false) {
+                if(subReqForm.userChk.checked == false || subReqForm.personalChk.checked == false) {
+                    alert('전체동의, 이용약관 동의 및 개인정보 수집 동의를 체크해주세요!')
+                    return;
+                }
             }
 
-            btnRstvnApp.addEventListener('click', ()=>{
-                if (dateSelector.value =='') {
-                    alert('픽업일을 선택하세요!');
-                    dateSelector.focus();
-                    return;
-                } else if (timeSelector.value =='') {
-                    alert('픽업시간을 선택하세요!')
-                    timeSelector.focus();
-                    return;
-                } else if (username.value =='') {
-                    alert('신청인을 입력하세요!')
-                    username.focus();
-                    return;
-                } else if (tel1.value =='') {
-                    alert('신청인 휴대폰번호를 입력하세요!')
-                    tel1.focus();
-                    return;
-                } else if (subReqForm.termAllChk.checked == false) {
-                    if(subReqForm.userChk.checked == false || subReqForm.personalChk.checked == false) {
-                        alert('전체동의, 이용약관 동의 및 개인정보 수집 동의를 체크해주세요!')
-                        return;
-                    }
-                }
 
+            initData();
 
-                initData();
+            const csrftoken = getCookie('csrftoken');
+            console.log(csrftoken);
 
-                const csrftoken = getCookie('csrftoken');
-                console.log(csrftoken);
-
-                fetch('{% url "car_apply" %}', {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        app_carno: carno.value,
-                        app_bymd: bymd.value,
-                        app_carname: tscarname,
-                        app_insptype: tsinsptype,
-                        app_expdate: expdate,
-                        app_name: username.value,
-                        app_tel1: tel1.value,
-                        app_tel2: tel2.value,
-                    }),
-                }).then(response => response.json())
-                    .then(text => conformResp(text))
-                    .catch((error) => {
-                        console.error('실패:', error);
-                    });
-            });     // 예약 신청 전송
-
-         };     // 받은 차량정보에 따라 처리 알고리즘
+            fetch('{% url "car_apply" %}', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    app_carno: carno.value,
+                    app_bymd: bymd.value,
+                    app_carname: tscarname,
+                    app_insptype: tsinsptype,
+                    app_expdate: expdate,
+                    app_pdate: dateSelector.value,
+                    app_ptime: timeSelector.value,
+                    app_name: username.value,
+                    app_addr1: roadaddr.value,
+                    app_addr2: detailaddress.value,
+                    app_tel1: tel1.value,
+                    app_tel2: tel2.value,
+                }),
+            }).then(response => response.json())
+                .then(text => conformResp(text))
+                .catch((error) => {
+                    console.error('실패:', error);
+                });
+        });     // 예약 신청 전송
 
         const conformResp = (tpdata) => {
             console.log(tpdata.cfmchk)
@@ -1835,10 +1844,8 @@
             } else {
                 alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
            }
-
-        }
+        }   // 접수 완료 정상 여부
 	</script>
-
 {% endblock %}
 </body>
 </html>

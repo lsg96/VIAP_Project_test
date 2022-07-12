@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 # Create your models here.
@@ -13,28 +15,43 @@ class CenterInfo(models.Model):
         db_table = 'centerinfo'
         ordering = ['-id']
 
+class Agent(models.Model):
+    agid = models.AutoField(primary_key=True)
+    agentno = models.CharField(max_length=6)
+    sido = models.CharField(max_length=2)
+    gugun = models.CharField(max_length=4)
+    ro = models.CharField(max_length=10)
+    agentname = models.CharField(max_length=5)
+
+    class Meta:
+        db_table = 'agent'
+
 class Apply(models.Model):
-    appno = models.CharField(primary_key=True,max_length=11)
-    pdate = models.DateField(null=False)
+    appid = models.AutoField(primary_key=True)
+    appno = models.CharField(max_length=11)
+    fdate = models.DateField(null=False)
+    edate = models.DateField(null=False, default=datetime.now)
     ptime = models.TimeField(null=False)
-    agent = models.CharField(max_length=10)
+    insptype = models.CharField(max_length=4,default='')
     msg = models.TextField(null=True)
     fnames = models.CharField(max_length=255,null=True)
+    agid = models.ForeignKey(Agent, on_delete=models.DO_NOTHING,default=0)
 
     class Meta:
         db_table = 'apply'
         ordering = ['-appno']
 
 class ApplyUser(models.Model):
-    carno = models.CharField(primary_key=True,max_length=9)
+    ausrid = models.AutoField(primary_key=True)
+    carno = models.CharField(max_length=9)
     appname = models.CharField(max_length=10,null=False)
     carname = models.CharField(max_length=10)
     apptel = models.CharField(max_length=10,null=False)
     alttel = models.CharField(max_length=10)
     birth = models.CharField(max_length=10)
-    addr1 = models.CharField(max_length=10)
-    addr2 = models.CharField(max_length=10)
-    usrappno = models.ForeignKey(Apply, on_delete=models.DO_NOTHING)
+    addr1 = models.CharField(max_length=30)
+    addr2 = models.CharField(max_length=30)
+    appid = models.ForeignKey(Apply, on_delete=models.DO_NOTHING,default=0)
 
     class Meta:
         db_table = 'applyuser'
@@ -49,13 +66,6 @@ class InspFee(models.Model):
          db_table = 'inspfee'
 
 
-class Agent(models.Model):
-    sido = models.CharField(max_length=2)
-    gugun = models.CharField(max_length=4)
-    ro = models.CharField(max_length=10)
-    agentname = models.CharField(max_length=5)
 
-    class Meta:
-        db_table = 'agent'
 
 

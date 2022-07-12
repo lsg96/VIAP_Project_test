@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from django.core import serializers
 from django.http import HttpResponse, request
@@ -12,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Create your views here.
 from django.views import View
 
-from check.models import InspFee, Agent
+from check.models import InspFee, Agent, ApplyUser, Apply
 
 
 class Car_deliveryView(View):
@@ -209,11 +210,54 @@ class Car_applyView(View):
 
     def post(self, request):
         tpdata = json.loads(request.body)
-        print('bbb')
+
         print(tpdata)
 
         chk = 'Y'
-        print(chk)
+        td = str(date.today()).split('-')
+        std = td[0] + td[1] + td[2]
+        cnt = 0
+        print(std)
+        # isApp = Apply.objects.first()
+        # isApp = Agent.objects.first()
+
+        # print(isApp.agentno)
+        # print(isApp.appno)
+        print(Apply.objects.filter(appno='20220712001')[0])
+        app_no = std + cnt
+
+        # try:
+        appusr = ApplyUser(
+            carno=tpdata['app_carno'],
+            appname = tpdata['app_name'],
+            carname = tpdata['app_carname'],
+            apptel = tpdata['app_tel1'],
+            alttel = tpdata['app_tel2'],
+            birth = tpdata['app_bymd'],
+            addr1 = tpdata['app_addr1'],
+            addr2 = tpdata['app_addr2'],
+            appno = tpdata['carno'],
+        )
+
+        fdt = tpdata['app_expdate'].split('~')[0]
+        edt = tpdata['app_expdate'].split('~')[1]
+
+        print(fdt)
+
+        # app = Apply(
+        #     appno = tpdata['app_carno'],
+        #     insptype = tpdata['app_insptype'],
+        #     pdate = tpdata['app_pdate']
+        #     fdate = fdt,
+        #     edate = edt,
+        #     ptime = tpdata['app_ptime'],
+        #     msg = tpdata['msg'],
+        #     fnames = tpdata['fnames'],
+        #     # agentno = edt,
+        # )
+        # except:
+        #     chk = 'N'
+
         context = {'cfmchk': chk}
         print(context)
         return HttpResponse(json.dumps(context), content_type='application/json')
