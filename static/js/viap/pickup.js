@@ -32,35 +32,30 @@ const alertdate_alt = document.querySelector('#alertdate_alert_display');
 const username = document.querySelector('#name');
 const tel1 = document.querySelector('#tel1');
 const tel2 = document.querySelector('#tel2');
+
 const btnRstvnApp = document.querySelector('#btnRstvnApp');
 
 // flatpickr(픽업)
 const dateSelector = document.querySelector('.dateSelector');
 const timeSelector = document.querySelector('#timeSelector');
 
-// 전송 form 관련 dom
-// const app_carno = document.querySelector('#app_carno');
-// const app_bymd = document.querySelector('#app_bymd');
-// const app_carname = document.querySelector('#app_carname');
-// const app_insptype = document.querySelector('#app_insptype');
-// const app_expdate = document.querySelector('#app_expdate');
-// const app_name = document.querySelector('#app_name');
-// const app_tel1 = document.querySelector('#app_tel1');
-// const app_tel2 = document.querySelector('#app_tel2');
-
 // 신청데이타 초기화
-let initData = ()=>{
-	let app_carno = '';
-	let app_bymd = '';
-	let app_carname = '';
-	let app_testype = '';
-	let app_expdate = '';
-	let app_name = '';
-	let addr1 = '';
-	let addr2 = '';
-	let app_tel1 = '';
-	let app_tel2 = '';
-};
+// let initData = ()=>{
+// 	let app_carno = '';
+// 	let app_bymd = '';
+// 	let app_carname = '';
+// 	let app_testype = '';
+// 	let app_expdate = '';
+// 	let app_pdate = '';
+// 	let app_ptime = '';
+// 	let app_name = '';
+// 	let app_addr1 = '';
+// 	let app_addr2 = '';
+// 	let app_tel1 = '';
+// 	let app_tel2 = '';
+// 	let msg = '';
+// 	let fnames = '';
+// };
 // 주소차기 : 다음
 function findAddr(){
 	new daum.Postcode({

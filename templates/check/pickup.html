@@ -1808,11 +1808,25 @@
             }
 
 
-            initData();
+            let app_carno = '';
+            let app_bymd = '';
+            let app_carname = '';
+            let app_testype = '';
+            let app_expdate = '';
+            let app_pdate = '';
+            let app_ptime = '';
+            let app_name = '';
+            let app_addr1 = '';
+            let app_addr2 = '';
+            let app_tel1 = '';
+            let app_tel2 = '';
+            let msg = '';
+            let fnames = '';
 
             const csrftoken = getCookie('csrftoken');
             console.log(csrftoken);
 
+            const memo = document.querySelector('#memo_ot');
             fetch('{% url "car_apply" %}', {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
@@ -1824,11 +1838,14 @@
                     app_expdate: expdate,
                     app_pdate: dateSelector.value,
                     app_ptime: timeSelector.value,
+                    app_agent: agentlist.value,
                     app_name: username.value,
                     app_addr1: roadaddr.value,
                     app_addr2: detailaddress.value,
                     app_tel1: tel1.value,
                     app_tel2: tel2.value,
+                    msg: memo.value,
+                    fnames:'',
                 }),
             }).then(response => response.json())
                 .then(text => conformResp(text))

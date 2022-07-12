@@ -70,7 +70,7 @@ class PickupView(View):
 
         # 검사료 조회: 차명이로 향후 배기량으로 설정
         pf = InspFee.objects.get(insptype=insptype, carname=carname)
-        # print(pf.fee)
+        print(pf.fee)
         # 검사대행원 매치
         pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
         # print(pa[0].agentname)
@@ -93,19 +93,9 @@ def carInfoSearch(request):
     form = json.loads(request.body)
     isError = 'N';    carno = '';      bymd = ''
     f = '';    e = '';    i = '';    c = ''
-
+    carno = form['carno']
+    bymd = form['bymd']
     try:
-        carno = form['carno']
-        bymd = form['bymd']
-    except:
-        isError = 'Y'
-
-    print(carno, bymd)
-
-    if isError == 'N':
-        # carno = '28어2384'
-        # bymd = '960324'
-
         URL = 'https://www.cyberts.kr/cp/pvr/cpr/readCpPvrCarPrsecResveMainView.do'
 
         options = Options()  # 옵션을 조정하기 위한셋팅
@@ -136,8 +126,8 @@ def carInfoSearch(request):
         # print(driver.find_element(By.XPATH,"/html/body/div[4]/div/div[2]/div[1]/div/span/p[1]/span"))
 
         if msg == '검사예약 진행 가능합니다. \
-            ※ 추가정보 \
-            - 검사 당일 기준 보험 미가입자는 검사를 받으실 수 없습니다.':
+                    ※ 추가정보 \
+                    - 검사 당일 기준 보험 미가입자는 검사를 받으실 수 없습니다.':
             keyword = driver.find_element(By.XPATH, f"/html/body/div[4]/div/div[2]/div[2]/button")  # 계속진행
             keyword.send_keys("\ue007")  # 검색후 enter키 입력 -- 다음페이지 이동
 
@@ -158,6 +148,16 @@ def carInfoSearch(request):
         else:  # 차량 검사 일자가 아닐시
             fdate = driver.find_element(By.XPATH, f"/html/body/div[4]/div/div[2]/div[1]/div/span/span[1]")
             edate = driver.find_element(By.XPATH, f"/html/body/div[4]/div/div[2]/div[1]/div/span/span[2]")
+    except:
+        isError = 'Y'
+
+    print(carno, bymd)
+
+    if isError == 'N':
+        # carno = '28어2384'
+        # bymd = '960324'
+
+
 
         i = insptype.text
         f = fdate.text
@@ -179,24 +179,21 @@ class Car_infoView(View):
         print(form)
 
         isError = 'N'
-        try:
-            carno = form['cn']
-            bymd = form['birth']
-        except:
-            isError = 'Y'
+
 
         # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
 
         carno = '28어8354'
-        # insptype = 'N'
-        insptype = '종합검사'
+        insptype = 'Y'
+        # insptype = '종합검사'
         fdate = '2022-07-01'
         edate = '2022-09-01'
-        carname = '아반떼'
+        carname = ''
 
         if isError == 'Y':
             return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
         elif isError == 'N':
+
 
             context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname}
             print(context)
@@ -213,48 +210,59 @@ class Car_applyView(View):
 
         print(tpdata)
 
-        chk = 'Y'
+        chk = 'Y' ; cnt = ''
+
+        # 예약번호 생성
         td = str(date.today()).split('-')
         std = td[0] + td[1] + td[2]
-        cnt = 0
-        print(std)
-        # isApp = Apply.objects.first()
-        # isApp = Agent.objects.first()
 
-        # print(isApp.agentno)
-        # print(isApp.appno)
-        print(Apply.objects.filter(appno='20220712001')[0])
+        isApp = Apply.objects.first()
+
+        f = isApp.appno[:8]
+        l = int(isApp.appno[8:])
+
+        if std == f:
+            l = str(l+1)
+            cnt = l.zfill(3)
+        else:
+            cnt = '001'
+
         app_no = std + cnt
-
-        # try:
-        appusr = ApplyUser(
-            carno=tpdata['app_carno'],
-            appname = tpdata['app_name'],
-            carname = tpdata['app_carname'],
-            apptel = tpdata['app_tel1'],
-            alttel = tpdata['app_tel2'],
-            birth = tpdata['app_bymd'],
-            addr1 = tpdata['app_addr1'],
-            addr2 = tpdata['app_addr2'],
-            appno = tpdata['carno'],
-        )
+        print(app_no)
 
         fdt = tpdata['app_expdate'].split('~')[0]
         edt = tpdata['app_expdate'].split('~')[1]
-
         print(fdt)
+        agent = tpdata['app_agent'].split('&nbsp')[0]
+        ag = Agent.objects.get(agentname=agent).agid
+        print(ag)
+        # try:
 
-        # app = Apply(
-        #     appno = tpdata['app_carno'],
-        #     insptype = tpdata['app_insptype'],
-        #     pdate = tpdata['app_pdate']
-        #     fdate = fdt,
-        #     edate = edt,
-        #     ptime = tpdata['app_ptime'],
-        #     msg = tpdata['msg'],
-        #     fnames = tpdata['fnames'],
-        #     # agentno = edt,
-        # )
+        app = Apply(
+            appno=app_no,
+            insptype=tpdata['app_insptype'],
+            pdate=tpdata['app_pdate'],
+            fdate=fdt,
+            edate=edt,
+            ptime=tpdata['app_ptime'],
+            msg=tpdata['msg'],
+            fnames=tpdata['fnames'],
+            agid_id=Agent.objects.get(agentname=agent).agid
+        )
+        app.save()
+
+        appusr = ApplyUser(
+            carno=tpdata['app_carno'],
+            appname=tpdata['app_name'],
+            carname=tpdata['app_carname'],
+            apptel=tpdata['app_tel1'],
+            alttel=tpdata['app_tel2'],
+            birth=tpdata['app_bymd'],
+            addr1=tpdata['app_addr1'],
+            addr2=tpdata['app_addr2'],
+            appid_id=Apply.objects.get(appno=app_no).appid
+        )
+        appusr.save()
         # except:
         #     chk = 'N'
 
