@@ -29,6 +29,7 @@ class Agent(models.Model):
 class Apply(models.Model):
     appid = models.AutoField(primary_key=True)
     appno = models.CharField(max_length=11)
+    pdate = models.DateField(null=False, default=datetime.now)
     fdate = models.DateField(null=False)
     edate = models.DateField(null=False, default=datetime.now)
     ptime = models.TimeField(null=False)
