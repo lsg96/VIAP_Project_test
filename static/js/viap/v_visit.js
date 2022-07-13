@@ -1,4 +1,10 @@
 // dom 정의 (전역 사용)
+
+// 다음주소 이용시
+const daumPostcode = document.querySelector('#btnexecDaumPostcode')
+const roadaddr = document.querySelector('#roadaddr')
+const detailaddress = document.querySelector('#detailaddress')
+
 // 자동차정보 입력
 const loadTestInfo = document.querySelector('#loadTestInfo');
 const carno = document.querySelector('#carno');
@@ -11,43 +17,71 @@ const subReqForm = document.submitReqForm;
 const tsresult_car_name = document.querySelector('#tsresult_car_name')
 const tsresult_test_type = document.querySelector('#tsresult_test_type')
 const tsresult_exp_date = document.querySelector('#tsresult_exp_date')
+const tsresultfee = document.querySelector('#tsresult_cost_1')
+const tsresultagfee = document.querySelector('#tsresult_cost_2')
+const tsresultpay = document.querySelector('#tsresult_payment')
 const result_ts = document.querySelector('#result_ts')
+const agentlist = document.querySelector('#agentlist')
 
 // 검사대상이 아닐때
 const carname_alt = document.querySelector('#carname_alert_display');
 const expdate_alt = document.querySelector('#expdate_alert_display');
 const alertdate_alt = document.querySelector('#alertdate_alert_display');
 
-// 다음주소 이용시
-const daumPostcode = document.querySelector('#btnexecDaumPostcode')
-const roadaddr = document.querySelector('#roadaddr')
-
 // 신청 관련 dom
 const username = document.querySelector('#name');
 const tel1 = document.querySelector('#tel1');
 const tel2 = document.querySelector('#tel2');
-const btnRstvnApp = document.querySelector('#btnRstvnApp');
 
-// 전송 form 관련 dom
-// const app_carno = document.querySelector('#app_carno');
-// const app_bymd = document.querySelector('#app_bymd');
-// const app_carname = document.querySelector('#app_carname');
-// const app_insptype = document.querySelector('#app_insptype');
-// const app_expdate = document.querySelector('#app_expdate');
-// const app_name = document.querySelector('#app_name');
-// const app_tel1 = document.querySelector('#app_tel1');
-// const app_tel2 = document.querySelector('#app_tel2');
+const btnRstvnApp = document.querySelector('#btnRstvnApp');
 
 // 신청데이타 초기화
 let initData = ()=>{
-	let app_carno = '';
-	let app_bymd = '';
-	let app_carname = '';
-	let app_testype = '';
-	let app_expdate = '';
-	let app_name = '';
-	let app_tel1 = '';
-	let app_tel2 = '';
+	// 다음주소 이용시
+	roadaddr.value = '';
+	detailaddress.value = '';
+
+	// 자동차정보 입력
+	loadTestInfo.value = '';
+	carno.value = '';
+	carnomsg.value = '';
+
+	// 검사대상일떄
+	 tsresult_car_name.value = '';
+	 tsresult_test_type.value = '';
+	 tsresult_exp_date.value = '';
+	 tsresultfee.value = '';
+	 tsresultagfee.value = '';
+	 tsresultpay.value = '';
+	 result_ts.value = '';
+
+	// 검사대상이 아닐때
+	 carname_alt.value = '';
+	 expdate_alt.value = '';
+	 alertdate_alt.value = '';
+
+	// 신청 관련 dom
+	 username.value = '';
+	 tel1.value = '';
+	 tel2.value = '';
+
+	// flatpickr(픽업)
+	dateSelector.value = '';
+	timeSelector.value = '';
+// 	let app_carno = '';
+// 	let app_bymd = '';
+// 	let app_carname = '';
+// 	let app_testype = '';
+// 	let app_expdate = '';
+// 	let app_pdate = '';
+// 	let app_ptime = '';
+// 	let app_name = '';
+// 	let app_addr1 = '';
+// 	let app_addr2 = '';
+// 	let app_tel1 = '';
+// 	let app_tel2 = '';
+// 	let msg = '';
+// 	let fnames = '';
 };
 // 주소차기 : 다음
 function findAddr(){

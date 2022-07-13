@@ -45,32 +45,30 @@
 <div id="main">
     <!-- Hero Start -->
 {#    <section class="bg-half-170 bg-light d-table w-100" style="background: url('/imgs/shape02.png') top left;">#}
-    <section class="bg-half-150 bg-light d-table w-100">
-        <div class="container">
-            <div class="row mt-5 justify-content-center">
+    <section class="bg-half-100 bg-light d-table w-100">
+        <div class="container ">
+            <div class="row mt-5">
                 <div class="col-lg-12 text-center">
-                    <div class="pages-heading">
+                    <div class="pages-heading mb-4">
                         <h4 class="title mb-0"> 자동차검사 대행비용 조회·예약 </h4>
                         <p class="text-muted para-desc mx-auto mb-1">자동차검사 대행비용을 조회하고 마지막에 예약도 가능합니다.</p>
                         <p class="text-muted mx-auto mb-0 pb-1">최대 3,000원 할인 혜택까지</p>
                     </div>
                 </div>  <!--end col-->
             </div><!--end row-->
-
-            <div class="row mt-5 ">
-                <nav aria-label="" class="d-flex justify-content-center">
-                    <ul class="breadcrumb bg-white rounded shadow mb-0 px-4 py-2">
-                        <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">자동차검사</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">픽업&딜리버리 예약</li>
-                    </ul>
-                </nav>
-            </div>
         </div> <!--end container-->
     </section>
-
-    <section class="section mt-lg-60 mt-sm-0 pt-lg-6 pt-3">
-        <div class="container mt-lg-3">
+    <div class="row mt-3 ">
+        <nav aria-label="" class="d-flex justify-content-center">
+            <ul class="breadcrumb bg-white rounded shadow mb-0 px-4 py-2">
+                <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">자동차검사</a></li>
+                <li class="breadcrumb-item active" aria-current="page">예약 및 픽업</li>
+            </ul>
+        </nav>
+    </div>
+    <section class="section mt-3 mt-sm-0 pt-1">
+        <div class="container ">
             <form id="submitReqForm" name="submitReqForm" method="post" enctype="multipart/form-data"  accept-charset="UTF-8">
                 {% csrf_token %}
                 <div class="row">
@@ -95,7 +93,7 @@
                                         <label class="form-label mt-3"><span class="text-danger">*</span> 자동차 픽업주소</label>
                                         <div class="form-icon position-relative ">
                                             <i data-feather="map-pin" class="fea icon-sm icons"></i>
-                                            <input type="text" name="roadaddr" id="roadaddr" class="form-control ps-5 bg-light" placeholder="버튼을 클릭해서 위치를 선택합니다." readonly>
+                                            <input type="text" name="roadaddr" id="roadaddr" class="form-control ps-5 bg-light" placeholder="버튼을 클릭해서 위치를 선택합니다." readonly value="{{ addr1 }}">
                                         </div>
                                     </div>
                                     <div class="form-group position-relative mb-0">
@@ -109,14 +107,14 @@
                             </div>
                         </div><!-- 픽업주소 END-->
                         <div class="custom-form p-4 mt-5 rounded border">
-                            <!-- 자동차검사 기초정보	-->
+                            <!-- 자동차검사 기초정보	-->{{ carno }}
                             <div class="row"  id="testInfo">
                                 <div class="col-lg-12">
                                     <div class="form-group position-relative">
                                         <label class="form-label"><span class="text-danger">*</span> 자동차번호</label>
                                         <div class="form-icon position-relative">
                                             <i class="mdi mdi-car-back icons"></i>
-                                            <input type="text" id="carno" name="carno" class="form-control ps-5" placeholder="">
+                                            <input type="text" id="carno" name="carno" class="form-control ps-5" placeholder="모든글자는 붙여서 쓰세요" value="{{ carno }}">
                                         </div>
                                         <div id="carnomsg" class="text-danger msgfs"></div>
                                     </div>
@@ -125,7 +123,7 @@
                                         <label class="form-label"><span class="text-danger">*</span> 소유자생년월일(법인번호) 앞 6자리</label>
                                         <div class="form-icon position-relative">
                                             <i data-feather="hash" class="fea icon-sm icons"></i>
-                                            <input type="number" id="bymd" name="bymd" class="form-control ps-5" placeholder="소유자 생년월일 6자리" maxlength="6" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                            <input type="number" id="bymd" name="bymd" class="form-control ps-5" placeholder="소유자 생년월일 6자리" value="{{ birth }}" maxlength="6" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                         </div>
                                         <div class="text-danger"></div>
                                     </div>
@@ -1533,19 +1531,6 @@
                     <input id="txtSch_sido"		name="txtSch_sido"			type="hidden"	class="form-control" readonly="">
                     <input id="txtSch_gugun"		name="txtSch_gugun"		type="hidden"	class="form-control" readonly="">
                     <input id="txtSch_dong"		name="txtSch_dong"		type="hidden"	class="form-control" readonly="">
-					<!--
-					<div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-							<label>방문예약일을 선택하세요 <span class="text-danger">*</span></label>
-							<div class="form-group position-relative">
-								<button class="btn btn-light w-100" id="btnPrev"><i class="mdi mdi-chevron-double-left"></i> 이전 날짜로 이동</button>
-								<input id="hopeSchDate"
-									name="hopeSchDate" type="hidden" placeholder="Click Me">
-								<button class="btn btn-light  w-100" id="btnNext"><i class="mdi mdi-chevron-double-right"></i> 다음 날짜로 이동</button>
-							</div>
-                        </div>
-                    </div>
-					-->
 					<div class="form-group mb-6">
 						<label class="text-dark small">방문예약일을 선택하세요 <span class="text-danger">*</span></label>
 						<p>고객님의 검사만료일은 "<span class="text-danger" id="display_enddate"></span>" 이며, 경과되면 과태료가 발생됩니다.</p>
@@ -1575,7 +1560,6 @@
 	</div>
 	<!-- Modal Content End -->
 
-    <!-- Modal Content Start -->
     <!-- Modal Content Start -->
     <div class="modal fade" id="register_alert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle7" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1658,7 +1642,6 @@
     </div>
     <!-- Modal Content End : 자동차검사 조회결과 -->
 
-
 	<div class="modal fade" id="req_confirmation-modal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content text-center">
@@ -1676,7 +1659,6 @@
 			</div>
         </div>
     </div>  <!-- 자동차검사 조회결과 -->
-
 
 	<div class="modal fade" id="alert-message-modal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -1834,9 +1816,7 @@
         let opts = '';
         let vals = '';
         let seq = '';
-        {#let tsresultfee = '';#}
-        {#let tsresultagfee = '';#}
-        {#let tsresultpay = '';#}
+
         loadTestInfo.addEventListener('click', () => {
             if (bymd.value.length != 6) {
                 alert('주민번호(생년월일) 앞 6자리를 입력하세요.\n※자동차가 법인소유이면 법인번호·개인사업자인 경우 사업자번호 앞6자리를 입력하세요.');
@@ -1859,9 +1839,6 @@
             console.log(csrftoken);
 
             // post 방식
-            // let carinput = { cn:carno.value, birth:bymd.value };
-            // console.log(carinput)
-
             fetch('{% url "pickup" %}', {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
@@ -1893,7 +1870,7 @@
             console.log(tsdata)
             console.log(tsdata.insptype)
             if (tsdata.insptype == 'Y') {
-                let expdate = tsdata.fdate + '~' + tsdata.edate;
+                expdate = tsdata.fdate + '~' + tsdata.edate;
                 let fdate = tsdata.fdate;
                 //  console.log(tsdata)
 
@@ -1923,6 +1900,7 @@
                     } else {
                         const csrftoken = getCookie('csrftoken');
                         console.log(csrftoken);
+                        console.log(expdate);
 
                         fetch('{% url "car_alert" %}', {
                             method: 'POST',
@@ -1946,12 +1924,11 @@
                     if (tpdata.cfmchk == 'Y') {
                         alert('예약이 정상적으로 접수되었습니다')
                         $('#register_alert').modal('hide');
-                        window.loaction.reload(true);
+                        location.href('/check/pickup');
                     } else {
                         alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
                     }
                 };   // 검사 알림 정상 여부
-
             } else if (tsdata.insptype == 'N'){
                 $('#alert-message-modal').modal('show');
             } else {
@@ -1987,7 +1964,6 @@
                 agentlist.innerHTML = opts
             }
          };     // 받은 차량정보에 따라 처리 알고리즘
-
 
         btnRstvnApp.addEventListener('click', ()=>{
             if (dateSelector.value =='') {

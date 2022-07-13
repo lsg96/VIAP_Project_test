@@ -188,17 +188,15 @@ class Car_infoView(View):
         # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
 
         carno = '28어8354'
-        insptype = 'Y'
-        # insptype = '종합검사'
+        # insptype = 'Y'
+        insptype = '종합검사'
         fdate = '2022-07-01'
         edate = '2022-09-01'
-        carname = ''
+        carname = '아반떼'
 
         if isError == 'Y':
             return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
         elif isError == 'N':
-
-
             context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname}
             print(context)
 
