@@ -239,14 +239,14 @@
                                                     <div class="form-icon position-relative">
                                                     <i data-feather="smartphone" class="fea icon-sm icons"></i>
                                                     <input type="text" id="tel2" name="tel2" maxlength="11" style="ime-mode:disabled;" class="form-control ps-5" placeholder="신청인과 방문하실 분이 다른경우 경우, 숫자만입력 :" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
-                                                    <input type="hidden" id="email" name="email" onkeyup="personalAgentInfo.checkEmail()" onclick="personalAgentInfo.checkEmail()" onchange="personalAgentInfo.checkEmail()" onpaste="personalAgentInfo.checkEmail()" value="" placeholder="이메일을 입력하세요">
+{#                                                    <input type="hidden" id="email" name="email" onkeyup="personalAgentInfo.checkEmail()" onclick="personalAgentInfo.checkEmail()" onchange="personalAgentInfo.checkEmail()" onpaste="personalAgentInfo.checkEmail()" value="" placeholder="이메일을 입력하세요">#}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-12">
                                                 <div class="form-group position-relative">
-                                                    <label class="form-label" data-toggle="tooltip" data-placement="right" style="display:none;" title="고객센터 1577-0266 으로 문의해주셔도 좋습니다">선택. 검사소에 남기실 말씀이 있으세요?
+                                                    <label class="form-label" data-bs-toggle="tooltip" data-placement="right" style="display:none;" title="고객센터 1577-0266 으로 문의해주셔도 좋습니다">선택. 검사소에 남기실 말씀이 있으세요?
                                                     </label>
                                                     <div class="form-icon position-relative">
                                                     <i data-feather="message-circle" class="fea icon-sm icons" style="top: 15px;"></i>
@@ -284,7 +284,7 @@
                                             <input type="checkbox" class="custom-control-input term" id="userChk" onclick="agreeTerm.termChk('userChk');">
                                             <label class="custom-control-label" for="userChk">이용약관 동의(필수) <span class="text-danger">*</span></label>
                                         </div>
-                                        <a href="javascript:void(0);" id="btnCarLoc1" data-toggle="modal" data-target="#userChk_modal" class=""> 자세히보기</a>
+                                        <a href="javascript:void(0);" id="btnCarLoc1" data-bs-toggle="modal" data-bs-target="#userChk_modal" class=""> 자세히보기</a>
                                     </div>
                                 </div>
                                 </div><!--end col-->
@@ -295,7 +295,7 @@
                                             <input type="checkbox" class="custom-control-input term" id="personalChk"onclick="agreeTerm.termChk('personalChk');">
                                             <label class="custom-control-label" for="personalChk">개인정보 수집 및 이용 동의(필수) <span class="text-danger">*</span> </label>
                                         </div>
-                                        <a href="javascript:void(0);" id="btnCarLoc2" data-toggle="modal" data-target="#personalChk_modal" class=""> 자세히보기</a>
+                                        <a href="javascript:void(0);" id="btnCarLoc2" data-bs-toggle="modal" data-bs-target="#personalChk_modal" class=""> 자세히보기</a>
                                     </div>
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@
                                                 <input type="checkbox" class="custom-control-input term" id="noticeChk" onclick="agreeTerm.termChk('noticeChk'); ">
                                                 <label class="custom-control-label" for="noticeChk">자동차검사안내에 대한 동의 (선택)</label>
                                             </div>
-                                            <a href="javascript:void(0);" id="btnCarLoc3" data-toggle="modal" data-target="#noticeChk_modal" class=""> 자세히보기</a>
+                                            <a href="javascript:void(0);" id="btnCarLoc3" data-bs-toggle="modal" data-bs-target="#noticeChk_modal" class=""> 자세히보기</a>
                                         </div>
                                     </div>
                                 </div>
@@ -324,10 +324,6 @@
                                 </div>
                             </div><!-- 자동차검사 기초정보 end row-->
                         </div><!--end custom-form-->
-                        <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-success" id="btnRstvnApp">예약신청</button>
-                        </div>
-
                         <!-- 주문폼 시작	-->
                         <!-- 휴대전화 인증	-->
                         <input type="hidden" id="tokn" name="tokn" value="0a7ca385f6efa31b76c9749718832a6d">
@@ -378,22 +374,181 @@
                         </div>
                     </div><!--end col-->
                 </div><!--end row-->
-                </div>
-            </form>
-        </div>
-        <div>
-            <!-- 검사알림 결과폼 -->
-            <form action="" name="ApplicationForm" id="ApplicationForm" method="post" style="">
-                {% csrf_token %}
-                <input type="hidden" name="app_carno" id="app_carno" value="">
-                <input type="hidden" name="app_bymd" id="app_bymd" value="">
-                <input type="hidden" name="app_carname" id="app_carname" value="">
-                <input type="hidden" name="app_insptype" id="app_insptype" value="">
-                <input type="hidden" name="app_expdate" id="app_expdate" value="">
-                <input type="hidden" name="app_name" id="app_name" value="">
-                <input type="hidden" name="app_tel1" id="app_tel1" value="">
-                <input type="hidden" name="app_tel2" id="app_tel2" value="">
+                    <div class="col-lg-4 col-md-5 col-12 mt-md-0 mt-sm-4">
+                        <div class="sidebar sticky-bar">
+                            <div class="border_bottom rounded border p-4 mb-4">
+                                <div class="d-flex mb-4 justify-content-between">
+                                    <h6>결제 및 예약하기</h6>
+                                    <a href="javascript:void(0);" class="text-muted h6"></a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-center table-padding mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class=""><span class="badge badge-success mr-1">온라인</span><span class="h6">예약할인</span></td>
+                                                <td class="text-right font-weight-bold prepaid_cost_text">1000</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="h6"><img alt="회원" src="{% static '/imgs/icon/naver_square.png' %}" class="" style="max-width:18px;"> 회원할인</td>
+                                                <td class="text-right font-weight-bold member_cost_text">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="h6">재구매 할인</td>
+                                                <td class="text-right font-weight-bold reorder_cost_text">0</td>
+                                            </tr>
+                                            <tr class="bg-light">
+                                                <td class="h6 font-weight-bold">결제 금액</td>
+                                                <td class="text-right text-primary h4 font-weight-bold payment_text">0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="cpnp" name="cpnp" value="0">
+                                    <input type="hidden" id="prepaid_cost" name="prepaid_cost" value="1000" >
+                                    <input type="hidden" id="member_cost" name="member_cost" value="0">
+                                    <input type="hidden" id="reorder_cost" name="reorder_cost" value="0">
+                                    <input type="hidden"  id="payment" name="payment" value="1000">
 
+                                    <ul class="list-unstyled mt-4 mb-0">
+                                        <li>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                            <div class="form-check">
+                                                <input type="radio" id="p_method-1" name="p_method" class="form-check-input"  value="1" checked="checked">
+                                                <label class="form-check-label" for="p_method-1">온라인신용카드결제<!-- <span class="badge badge-warning">선결제할인</span>--></label>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li class="mt-3">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                            <div class="form-check mb-0">
+                                            <input type="radio" id="p_method-2" name="p_method" class="form-check-input"  value="3">
+                                                <label class="form-check-label" for="p_method-2">간편결제</label>
+                                                <img alt="네이버페이" src="{% static '/imgs/icon/naver_square.png' %}" class="" style="max-width:15px;">
+                                                <img alt="카카오페이" src="{% static '/imgs/icon/kakao_square.png' %}" class="" style="max-width:15px;">
+                                                <img alt="PAYCO" src="{% static '/imgs/icon/payco_square.png' %}" class="" style="max-width:15px;">
+                                            </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="mt-2 pt-2">
+                                        <a href="javascript:void(0);" id="btnRstvnApp" class="btn btn-block  btn-success py-4 w-100">예약하기</a>
+{#                                        <a href="javascript:personalAgentInfo.validation();" id="btnRstvnApp" class="btn btn-block  btn-success py-4 w-100">예약하기</a>#}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card rounded border-1 overflow-hidden">
+                                <div class="card-header bg-light">
+                                    <h5 class="card-title"><span href="javascript:void(0)" class="badge badge-link bg-primary text-white me-2 mt-2">법인고객</span> 세금계산서 안내</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-0"><span class="text-danger">세금계산서 발행</span> 등으로 무통장입금이 필요하신 경우에는 <mark><a href="javascript:void(0);" class="alert-link OpenChat"><i data-feather="message-circle" class="fea icon-sm"> </i> 실시간 온라인 상담</a></mark> 또는 고객센터 <mark><a href="tel:1577-0266"><i data-feather="phone" class="fea icon-sm"> </i> 1577-0266</a></mark> 으로 문의해 주십시오.</p>
+                                </div>
+                            </div>
+
+
+                            <div class="widget mt-4 d-none">
+                                <!-- CATAGORIES -->
+                                <div class="row justify-content-center mt-lg-4 ">
+                                    <div class="col-md-12  pt-2">
+                                        <div class="bg-light p-4 rounded shadow d-block">
+                                            <img src="/imgs/payments/payment/ibk.png" class="text-right" alt="" height="60">
+                                            <div class="mt-4">
+                                                <h5 class=""> 457-082661-01-033</h5>
+                                                <div>
+                                                    <h6 class="mb-0">예금주 <span class="text-muted">(주)더조은</span></h6>
+                                                    <h6 class="mb-0">입금자명: <span class="text-muted">자동차번호</span></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--end col-->
+                                </div>
+                            </div>
+
+
+                            <div id="faq-accordion" class=" d-none">
+                                <div class="card mt-4 mb-2 mb-md-3 ">
+                                    <a href="#accordion-4" data-bs-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4 text-secondary collapsed">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label  for="" class="text-default" style="cursor: pointer;">결제와 세금계산서발행은 어떻게 하나요? </label>
+                                            <!--<h6 class="mb-0 mr-2">결제는 어떻게 하나요?</h6>-->
+                                            <i class="las la-arrow-right icon"></i>
+                                        </div>
+                                    </a>
+                                    <div class="collapse" id="accordion-4" data-parent="#faq-accordion" style="">
+                                        <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                            <p>결제방법</p>
+                                            <p>① 예약시 온라인신용카드결제(할인적용), ② 후불신용카드결제, ③ 무통장입금, ④ 고객센터를 통한 신용카드 결제가 가능하며 모든 결제액은 부가세가 포함되어 있습니다.</p>
+                                            <p>세금계산서 발행</p>
+                                            <p>세금계산서가 필요하신 경우에는 고객센터(1577-0266, 온라인 채팅)를 통해 요청을 해주시고, 신용카드에 대한 결제 영수증은 문자메세지 또는 메일로 발송해드립니다.<br />법인카드로 결제시에는 신용카드전표를 사용하시고 별도의 세금계산서를 발행해드리지는 않습니다.<br />
+                                            무통장입금으로 결제하시는 경우에는 목적에 따라 소득공제 또는 지출증빙용 영수증을 문자메세지 또는 메일로 발송해드립니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-2 mb-md-3">
+                                    <a href="#accordion-5" data-bs-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4 text-secondary">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label  for="" class="text-default" style="cursor: pointer;">자동차검사소에 예약은 별도로 해야하나요? </label>
+                                            <!--<h6 class="mb-0 mr-2">자동차검사소에 예약은 별도로 해야하나요?</h6>-->
+                                            <i class="las la-arrow-right icon"></i>
+                                        </div>
+                                    </a>
+                                    <div class="collapse" id="accordion-5" data-parent="#faq-accordion">
+                                        <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                            아닙니다. 모터맨에 대행 예약을 하시면 검사소에 별도로 예약을 하실 필요는 없습니다.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-2 mb-md-3">
+                                    <a href="#accordion-1" data-bs-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4 text-secondary">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label  for="" class="text-default" style="cursor: pointer;">한국교통안전공단 검사소에 예약을 했습니다. 대행이 가능합니까? </label>
+
+                                            <!--<h6 class="mb-0 mr-2">한국교통안전공단 검사소에 예약을 했습니다. 대행이 가능합니까?</h6>-->
+                                            <i class="las la-arrow-right icon"></i>
+                                        </div>
+                                    </a>
+                                    <div class="collapse" id="accordion-1" data-parent="#faq-accordion">
+                                        <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                            네. 한국교통안전공단 검사소에 예약을 하신 고객께서는 아래의 상담톡 또는 고객센터 <a href="tel:1577-0266">1577-0266</a> 으로 문의하여 모터맨의 딜리버리 서비스를 이용하세요.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-2 mb-md-3">
+                                    <a href="#accordion-2" data-bs-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4 text-secondary">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label  for="" class="text-default" style="cursor: pointer;">롯데렌터카·SK렌터카·삼성카드 렌트/리스자동차를 이용합니다 </label>
+                                            <!--<h6 class="mb-0 mr-2">롯데렌터카·SK렌터카·삼성카드 렌트/리스자동차를 이용합니다</h6>-->
+                                            <i class="las la-arrow-right icon"></i>
+                                        </div>
+                                    </a>
+                                    <div class="collapse" id="accordion-2" data-parent="#faq-accordion">
+                                        <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                            롯데렌터카·SK렌터카·삼성카드에서 렌트/리스를 이용하시는 고객님께서는 <a href="tel:1588-2899">1588-2899</a>로 요청하시면 <span class="badge badge-primary rounded mr-1">무료 검사대행</span>을 이용하실 수 있습니다.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-2 mb-md-3">
+                                    <a href="#accordion-3" data-bs-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4 text-secondary">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label  for="" class="text-default" style="cursor: pointer;"><i class="mdi mdi-cellphone-android text-danger"></i>휴대전화 인증은 꼭 해야하나요? </label>
+                                            <!--<h6 class="mb-0 mr-2">자동차검사소에 예약은 별도로 해야하나요?</h6>-->
+                                            <i class="las la-arrow-right icon"></i>
+                                        </div>
+                                    </a>
+                                    <div class="collapse" id="accordion-3" data-parent="#faq-accordion">
+                                        <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                            고객님의 불편을 염려해 인증을 받지 않았습니다만 번호를 오입력 하신 고객님께서 서비스 이용이 불가능하신 상태가 빈번히 발생되어 부득이 휴대전화번호 확인을 시행하게 되었습니다.<br />
+                                            통신장애로 문자수신이 되지 않으시면 고객센터 1577-0266 또는 온라인 채팅으로 접수하실 수 있습니다.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!--end col-->
+                </div>
             </form>
         </div><!--end container-->
     </section><!--end section-->
@@ -407,9 +562,7 @@
             <div class="modal-content rounded shadow border-0">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle">이용약관 </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="bg-white p-3 rounded box-shadow">
@@ -667,7 +820,7 @@
                     </div> <!-- 전체동의 -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -680,9 +833,7 @@
             <div class="modal-content rounded shadow border-0">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle2">개인정보 수집 및 이용에 대한 안내 </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="bg-white p-3 rounded box-shadow">
@@ -1027,7 +1178,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1035,14 +1186,94 @@
     <!-- Modal Content End : 개인정보 수집 및 이용에 대한 안내-->
 
     <!-- Modal Content Start -->
+    <div class="modal fade" id="noticeChk_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
+<!--		<div class="modal fade" id="noticeChk_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content rounded shadow border-0">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalCenterTitle3">자동차검사 안내에 대한 동의</h5>
+<!--						<h5 class="modal-title" id="exampleModalCenterTitle">자동차검사 안내에 대한 동의</h5>-->
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="bg-white p-3 rounded box-shadow">
+							<p class="text-muted mb-0">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+
+						<h6>자동차검사 안내 동의 :</h6>
+						<p class="text-muted">주식회사 케이엠디에스는 (이하 "회사"는) 고객님의 개인정보를 중요시하며, "정보통신망 이용촉진 및 정보보호"에 관한 법률을 준수하고 있습니다.</p>
+						<p class="text-muted">자동차검사 안내는 "자동차검사 기간"이 도래하는 경우 해당 자동차의 검사기간에 대한 무료 안내를 제공하는 서비스입니다</p>
+
+
+							<h6 class="footer-head">수집하는 개인정보 항목 및 수집방법 :</h6>
+
+							<h6>가. 대상</h6>
+							<ul class="list-unstyled text-muted">
+								<li><a href="javascript:void(0);" class=""><i class="mdi mdi-chevron-right mr-1"></i> 자동차소유자 또는 소유자의 동의를 받은 가족(제3자는 신청할 수 없습니다.)</a></li>
+								<li><a href="javascript:void(0);" class=""><i class="mdi mdi-chevron-right mr-1"></i> 타인의 정보를 도용하여 신청하신 경우 해당 법률에 따라 처분될 수 있을 알려드립니다.</a></li>
+							</ul>
+
+
+
+							<h6>나. 안내에 해당하는 내용</h6>
+						<ul class="list-unstyled feature-list text-muted">
+							<li><i class="mdi mdi-pan-right mdi-24px mr-2"></i>검사유효기간 만료일 사전 안내 및 자동차 안전관리 정보 제공 등</li>
+						</ul>
+
+						<h6>개인정보 수집 및 이용에 대한 안내 :</h6>
+						<div class="table-responsive bg-white shadow rounded">
+							<table class="table mb-0 table-center">
+								<thead>
+									<tr>
+										<th scope="col">목적</th>
+										<th scope="col">항목</th>
+										<th scope="col" style="max-width: 150px;">보유·이용 기간</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td scope="row">자동차검사안내위한 문자(sms) 및 이메일발송, 유선안내 등</td>
+										<th>
+											<p class="mt-2 mb-0 font-weight-normal h5"> <span class="text-muted h6">자동차번호, 생년월일, 핸드폰번호, 이메일</span> </p>
+										</th>
+										<td>정보주체의 삭제요청 시까지</td>
+									</tr>
+								</tbody>
+							</table><!--end table-->
+						</div>
+
+						<h6>책임의 한계 :</h6>
+						<ul class="list-unstyled feature-list text-muted">
+							<li><i class="mdi mdi-pan-right mdi-24px mr-2"></i>자동차검사 안내는 모터맨이 제공하는 서비스를 이용한 고객에게 무료로 제공하는 부가서비스입니다. </li>
+							<li><i class="mdi mdi-pan-right mdi-24px mr-2"></i>자동차검사 안내 불가로 인한 고객의 유무형의 어떠한 손해에 대해서도 책임을 지지 않습니다</li>
+						</ul>
+
+						 <p class="text-muted">이용자는 개인정보 수집 및 활용에 대한 동의를 거부할 권리가 있으나, 미동의 시 서비스를 이용 하실 수 없습니다.</p>
+
+                    </div><!--end col-->
+                </div><!--end row-->
+
+				<!-- End Privacy -->
+							</p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+    <!-- Modal Content End : 자동차검사안내에 대한 동의 (선택) -->
+
+    <!-- Modal Content Start -->
     <div class="modal fade" id="tsChk_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle4" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content rounded shadow border-0">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle4">자동차검사 정보의 수집 및 이용 동의</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="bg-white p-3 rounded box-shadow">
@@ -1127,7 +1358,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1140,9 +1371,7 @@
             <div class="modal-content rounded shadow border-0">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle4">자동차검사 정보의 수집 및 이용 동의</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="bg-white p-3 rounded box-shadow">
@@ -1227,7 +1456,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1284,9 +1513,7 @@
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalCenterTitle">검사소 방문일 선택
 					</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
                     <input id="txtSch_address"	name="txtSch_address"	type="hidden"	class="form-control" readonly="">
@@ -1328,7 +1555,7 @@
 				</div>
 				<div class="modal-footer">
 
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -1342,12 +1569,11 @@
             <div class="modal-content rounded shadow border-0">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle7">자동차검사 조회결과</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="feature-form">
-{#                        <img src="images/illustrator/Mobile_notification_SVG.svg" alt="">#}
+{#                        <img src="imgs/illustrator/Mobile_notification_SVG.svg" alt="">#}
 						<div class="row">
 							<form id="submitAlertForm" name="submitAlertForm" method="post" accept-charset="UTF-8">
 							<div class="col-lg-12">
@@ -1427,12 +1653,10 @@
 			<div class="modal-content text-center">
                 <div class="modal-header">
                     <h5 class="modal-title" id="7exampleModalCenterTitle8">자동차검사 조회결과</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 				<div class="modal-body px-md-4 px-lg-5 pb-4 pb-lg-5">
-                    <img src="{% static '/images/illustrator/Mobile_notification_SVG.svg' %}" alt="">
+                    <img src="{% static '/imgs/illustrator/Mobile_notification_SVG.svg' %}" alt="">
 					<h5 class="h3" id="submit_title"></h5>
 					<div class="send">
 						<span id="submit_result"></span>
@@ -1454,7 +1678,7 @@
 					<div class="container">
 						<div class="row justify-content-center">
 							<div class="col-lg-12 col-md-12 text-center">
-								<img src="{% static '/images/alert/notfound.png' %}" class="img-fluid">
+								<img src="{% static '/imgs/alert/notfound.png' %}" class="img-fluid">
 								<div class="text-uppercase mt-4 display-3">Oh ! no</div>
 								<div class="text-capitalize text-dark mb-4 alert-title"></div>
                                 <p class="text-muted para-desc mx-auto">해당차량의 정보가 존재하지 않습니다.<br>
@@ -1474,7 +1698,6 @@
 			</div>
         </div>
     </div>
-
 </div>
 {% endblock %}
 {% block script %}

@@ -40,7 +40,38 @@ const dateSelector = document.querySelector('.dateSelector');
 const timeSelector = document.querySelector('#timeSelector');
 
 // 신청데이타 초기화
-// let initData = ()=>{
+let initData = ()=>{
+	// 다음주소 이용시
+	roadaddr.value = '';
+	detailaddress.value = '';
+
+	// 자동차정보 입력
+	loadTestInfo.value = '';
+	carno.value = '';
+	carnomsg.value = '';
+
+	// 검사대상일떄
+	 tsresult_car_name.value = '';
+	 tsresult_test_type.value = '';
+	 tsresult_exp_date.value = '';
+	 tsresultfee.value = '';
+	 tsresultagfee.value = '';
+	 tsresultpay.value = '';
+	 result_ts.value = '';
+
+	// 검사대상이 아닐때
+	 carname_alt.value = '';
+	 expdate_alt.value = '';
+	 alertdate_alt.value = '';
+
+	// 신청 관련 dom
+	 username.value = '';
+	 tel1.value = '';
+	 tel2.value = '';
+
+	// flatpickr(픽업)
+	dateSelector.value = '';
+	timeSelector.value = '';
 // 	let app_carno = '';
 // 	let app_bymd = '';
 // 	let app_carname = '';
@@ -55,7 +86,8 @@ const timeSelector = document.querySelector('#timeSelector');
 // 	let app_tel2 = '';
 // 	let msg = '';
 // 	let fnames = '';
-// };
+};
+
 // 주소차기 : 다음
 function findAddr(){
 	new daum.Postcode({

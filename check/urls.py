@@ -13,4 +13,5 @@ urlpatterns = [
     path('pickup/', views.PickupView.as_view(), name='pickup'),
     path('car_info/', views.Car_infoView.as_view(), name='car_info'),
     path('car_apply/', views.Car_applyView.as_view(), name='car_apply'),
+    path('car_alert/', views.Car_alertView.as_view(), name='car_alert'),
 ]

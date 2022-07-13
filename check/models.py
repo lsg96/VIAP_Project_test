@@ -40,7 +40,7 @@ class Apply(models.Model):
 
     class Meta:
         db_table = 'apply'
-        ordering = ['-appno']
+        ordering = ['-appid']
 
 class ApplyUser(models.Model):
     ausrid = models.AutoField(primary_key=True)
@@ -66,7 +66,18 @@ class InspFee(models.Model):
      class Meta:
          db_table = 'inspfee'
 
+class Alert(models.Model):
+    atid = models.AutoField(primary_key=True)
+    atno = models.CharField(max_length=12)
+    atname = models.CharField(max_length=10, null=False)
+    attel = models.CharField(max_length=10)
+    atfdate = models.CharField(null=False, max_length=10)
+    atedate = models.CharField(null=False, max_length=10)
 
+
+    class Meta:
+        db_table = 'alert'
+        ordering = ['-atid']
 
 
 

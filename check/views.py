@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Create your views here.
 from django.views import View
 
-from check.models import InspFee, Agent, ApplyUser, Apply
+from check.models import InspFee, Agent, ApplyUser, Apply, Alert
 
 
 class Car_deliveryView(View):
@@ -58,30 +58,34 @@ class PickupView(View):
         except:
             isError = 'Y'
 
-        # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request.body)
-
-        carno = '28어8354'
-        # insptype = 'N'
-        insptype = '종합검사'
-        fdate = '2022-07-01'
-        edate = '2022-09-01'
-        carname = '아반떼'
-        agentfee = '15000'
-
-        # 검사료 조회: 차명이로 향후 배기량으로 설정
-        pf = InspFee.objects.get(insptype=insptype, carname=carname)
-        print(pf.fee)
-        # 검사대행원 매치
-        pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
-        # print(pa[0].agentname)
-        json_pa = serializers.serialize('json', pa)
-
-
         if isError == 'Y':
             return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
         elif isError == 'N':
+            # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request.body)
 
-            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'json_pa': json_pa}
+            carno = '28어8354'
+            insptype = 'Y'
+            # insptype = '종합검사'
+            fdate = '2022-07-01'
+            edate = '2022-09-01'
+            carname = '아반떼'
+            agentfee = '15000'
+
+            if insptype == 'Y':
+                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate}
+
+            elif insptype == 'N':
+                pass
+            else:
+                # 검사료 조회: 차명이로 향후 배기량으로 설정
+                pf = InspFee.objects.get(insptype=insptype, carname=carname)
+                print(pf.fee)
+                # 검사대행원 매치
+                pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
+                # print(pa[0].agentname)
+                json_pa = serializers.serialize('json', pa)
+
+                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'json_pa': json_pa}
 
             print(context)
 
@@ -203,12 +207,12 @@ class Car_infoView(View):
 
 class Car_applyView(View):
     def get(self, request):
-        return render(request, 'check/car_info.html')
+        return render(request, 'check/pickup.html')
 
     def post(self, request):
-        tpdata = json.loads(request.body)
+        form = json.loads(request.body)
 
-        print(tpdata)
+        print(form)
 
         chk = 'Y' ; cnt = ''
 
@@ -230,42 +234,99 @@ class Car_applyView(View):
         app_no = std + cnt
         print(app_no)
 
-        fdt = tpdata['app_expdate'].split('~')[0]
-        edt = tpdata['app_expdate'].split('~')[1]
+        fdt = form['app_expdate'].split('~')[0]
+        edt = form['app_expdate'].split('~')[1]
         print(fdt)
-        agent = tpdata['app_agent'].split('&nbsp')[0]
+        agent = form['app_agent'].split('&nbsp')[0]
         ag = Agent.objects.get(agentname=agent).agid
         print(ag)
-        # try:
 
-        app = Apply(
-            appno=app_no,
-            insptype=tpdata['app_insptype'],
-            pdate=tpdata['app_pdate'],
-            fdate=fdt,
-            edate=edt,
-            ptime=tpdata['app_ptime'],
-            msg=tpdata['msg'],
-            fnames=tpdata['fnames'],
-            agid_id=Agent.objects.get(agentname=agent).agid
+        try:
+
+            app = Apply(
+                appno=app_no,
+                insptype=form['app_insptype'],
+                pdate=form['app_pdate'],
+                fdate=fdt,
+                edate=edt,
+                ptime=form['app_ptime'],
+                msg=form['msg'],
+                fnames=form['fnames'],
+                agid_id=Agent.objects.get(agentname=agent).agid
+            )
+            app.save()
+
+            appusr = ApplyUser(
+                carno=form['app_carno'],
+                appname=form['app_name'],
+                carname=form['app_carname'],
+                apptel=form['app_tel1'],
+                alttel=form['app_tel2'],
+                birth=form['app_bymd'],
+                addr1=form['app_addr1'],
+                addr2=form['app_addr2'],
+                appid_id=Apply.objects.get(appno=app_no).appid
+            )
+            appusr.save()
+        except:
+            chk = 'N'
+
+        context = {'cfmchk': chk}
+        print(context)
+        return HttpResponse(json.dumps(context), content_type='application/json')
+
+
+class Car_alertView(View):
+    def get(self, request):
+        return render(request, 'check/pickup.html')
+
+    def post(self, request):
+        form = json.loads(request.body)
+        print(form)
+
+        chk = 'Y'; cnt = ''; f = ''; l = ''; first = ''    # 초기화
+        isApp = ''
+
+        # 예약번호 생성
+        td = str(date.today()).split('-')
+        std = 'a' + td[0] + td[1] + td[2]
+        try:
+            isApp = Alert.objects.first()
+            print(isApp.atno)
+        except:
+            first = 'Y'
+            cnt = '001'
+
+        if first != 'Y':
+            f = isApp.atno[:9]
+            l = int(isApp.atno[9:])
+
+
+        if std == f:
+            l = str(l + 1)
+            cnt = l.zfill(3)
+        else:
+            cnt = '001'
+
+        at_no = std + cnt
+        print(at_no)
+
+        fdt = form['at_expdate'].split('~')[0]
+        edt = form['at_expdate'].split('~')[1]
+        print(fdt)
+
+        at = Alert(
+            atno=at_no,
+            atname=form['at_name'],
+            attel=form['at_tel1'],
+            atfdate=fdt,
+            atedate=edt,
         )
-        app.save()
+        # print(at.atno)
+        at.save()
 
-        appusr = ApplyUser(
-            carno=tpdata['app_carno'],
-            appname=tpdata['app_name'],
-            carname=tpdata['app_carname'],
-            apptel=tpdata['app_tel1'],
-            alttel=tpdata['app_tel2'],
-            birth=tpdata['app_bymd'],
-            addr1=tpdata['app_addr1'],
-            addr2=tpdata['app_addr2'],
-            appid_id=Apply.objects.get(appno=app_no).appid
-        )
-        appusr.save()
-        # except:
-        #     chk = 'N'
 
+        chk = 'Y'
         context = {'cfmchk': chk}
         print(context)
         return HttpResponse(json.dumps(context), content_type='application/json')
