@@ -63,9 +63,9 @@ class PickupView(View):
         elif isError == 'N':
             # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request.body)
 
+            # insptype = 'Y'
             carno = '28어8354'
-            insptype = 'Y'
-            # insptype = '종합검사'
+            insptype = '종합검사'
             fdate = '2022-07-01'
             edate = '2022-09-01'
             carname = '아반떼'
@@ -331,8 +331,8 @@ class Car_alertView(View):
             atfdate=fdt,
             atedate=edt,
         )
-        print(at.atno)
-        # at.save()
+        # print(at.atno)
+        at.save()
 
 
         chk = 'Y'
