@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Create your views here.
 from django.views import View
 
-from check.models import InspFee, Agent, ApplyUser, Apply, Alert
+from check.models import InspFee, Agent, ApplyUser, Apply, Alert, Carzipcode
 
 
 class Car_deliveryView(View):
@@ -173,7 +173,18 @@ def carInfoSearch(request):
 
 class Car_infoView(View):
     def get(self, request):
-        return render(request, 'check/car_info.html')
+        form = request.GET.dict()
+        print(form)
+
+        if request.GET.get('sido') is not None:
+            stnames = Carzipcode.objects.filter(sido=form['sido'], gugun=form['gugun'])
+
+            json_data = serializers.serialize('json', stnames)
+            print(json_data)
+
+            return HttpResponse(json_data, content_type='application/json')
+        else:
+            return render(request, 'check/car_info.html')
 
     def post(self, request):
         # json으로 넘겨서 json으로 받아야 함
@@ -188,8 +199,8 @@ class Car_infoView(View):
         # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
 
         carno = '28어8354'
-        # insptype = 'Y'
-        insptype = '종합검사'
+        insptype = 'Y'
+        # insptype = '종합검사'
         fdate = '2022-07-01'
         edate = '2022-09-01'
         carname = '아반떼'
@@ -320,8 +331,8 @@ class Car_alertView(View):
             atfdate=fdt,
             atedate=edt,
         )
-        # print(at.atno)
-        at.save()
+        print(at.atno)
+        # at.save()
 
 
         chk = 'Y'

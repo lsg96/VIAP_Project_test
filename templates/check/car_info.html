@@ -164,16 +164,16 @@
 
                                 <div class="col-lg-12 mt-3 d-flex justify-content-center">
                                     <div>
-                                    <a href="javascript:void(0)"
+                                    <button type="button"
                                         class="btn btn-success w-100"
                                         id="btnschdate"
-                                        style="font-size: 13px"><i class="bi bi-search" style="font-size: 14px;"></i> 가까운 검사소 찾기 </a>
+                                        style="font-size: 13px"><i class="bi bi-search" style="font-size: 14px;"></i> 가까운 검사소 찾기 </button>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- 픽업주소 END-->
                 </div><!--end row-->
-                <div class="col-lg-4 col-md-5 col-12 mt-md-0 mt-sm-4">
+                    <div class="col-lg-4 col-md-5 col-12 mt-md-0 mt-sm-4">
                         <div class="sidebar sticky-bar">
                             <div class="border_bottom rounded border p-4 mb-4">
                                 <div class="d-flex mb-4 justify-content-between">
@@ -229,7 +229,7 @@
                                         </li>
                                     </ul>
                                     <div class="mt-2 pt-2">
-                                        <a href="{% url 'pickup' %}"  class="btn btn-block  btn-success py-4 w-100">예약하기</a>
+                                        <a href="{% url 'pickup' %}"  class="btn btn-block  btn-success py-4 w-100">픽업및예약하기</a>
 {#                                        <a href="javascript:personalAgentInfo.validation();" id="btnRstvnApp" class="btn btn-block  btn-success py-4 w-100">예약하기</a>#}
                                     </div>
                                 </div>
@@ -408,19 +408,6 @@
                     <input id="txtSch_sido"		name="txtSch_sido"			type="hidden"	class="form-control" readonly="">
                     <input id="txtSch_gugun"		name="txtSch_gugun"		type="hidden"	class="form-control" readonly="">
                     <input id="txtSch_dong"		name="txtSch_dong"		type="hidden"	class="form-control" readonly="">
-					<!--
-					<div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-							<label>방문예약일을 선택하세요 <span class="text-danger">*</span></label>
-							<div class="form-group position-relative">
-								<button class="btn btn-light w-100" id="btnPrev"><i class="mdi mdi-chevron-double-left"></i> 이전 날짜로 이동</button>
-								<input id="hopeSchDate"
-									name="hopeSchDate" type="hidden" placeholder="Click Me">
-								<button class="btn btn-light  w-100" id="btnNext"><i class="mdi mdi-chevron-double-right"></i> 다음 날짜로 이동</button>
-							</div>
-                        </div>
-                    </div>
-					-->
 					<div class="form-group mb-6">
 						<label class="text-dark small">방문예약일을 선택하세요 <span class="text-danger">*</span></label>
 						<p>고객님의 검사만료일은 "<span class="text-danger" id="display_enddate"></span>" 이며, 경과되면 과태료가 발생됩니다.</p>
@@ -551,6 +538,30 @@
         </div>
     </div>
     <!-- 자동차검사 조회결과 -->
+
+        <!-- Modal Content Start -->
+    <div class="modal fade" id="car_station" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle7" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle7">자동차검사소 </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="feature-form">
+{#                        <img src="imgs/illustrator/Mobile_notification_SVG.svg" alt="">#}
+						<div class="row">
+                            <div id="tb_Carst">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Content End : 가까운 자동차검사소 조회결과 -->
+
 
 	<div class="modal fade" id="alert-message-modal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -754,7 +765,7 @@
                     if (tpdata.cfmchk == 'Y') {
                         alert('예약이 정상적으로 접수되었습니다')
                         $('#register_alert').modal('hide');
-                        location.href('/check/car_infor');
+                        window.location.reload();
                     } else {
                         alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
                     }
@@ -785,39 +796,54 @@
             findAddr();
         });     // 다음 주소록 호출
 
-        btnRstvnApp.addEventListener('click', ()=>{
-            initData();
+        // 가까운 검사소 찾기
+        const btnschdate = document.querySelector('#btnschdate');
+        const tb_Carst = document.querySelector('#tb_Carst');
 
-            const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken);
+        btnschdate.addEventListener('click', ()=>{
+            console.log('kkk')
+            addrs = roadaddr.value.split(' ');
+            sido = addrs[0]
+            gugun = addrs[1]
+            ro = addrs[2]
 
-            fetch('{% url "car_apply" %}', {
-                method: 'POST',
-                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    app_carno: carno.value,
-                    app_bymd: bymd.value,
-                    app_carname: tscarname,
-                    app_insptype: tsinsptype,
-                    app_expdate: expdate,
-                    app_name: username.value,
-                    app_tel1: tel1.value,
-                    app_tel2: tel2.value,
-                }),
-            }).then(response => response.json())
-                .then(text => conformResp(text))
-            .catch((error) => {
-            console.error('실패:', error);
-            });
-        });     // 예약 신청 전송
-        const conformResp = (tpdata) => {
-            console.log(tpdata.cfmchk)
-            if (tpdata.cfmchk == 'Y') {
-                alert('예약이 정상적으로 접수되었습니다')
-            } else {
-                alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
-           }
-        };
+            let qry = '?sido=' + sido + '&gugun=' + gugun + '&ro=' + ro;
+            console.log(qry)
+
+            fetch('{% url 'car_info' %}' + qry)
+                .then(response => response.json())
+                .then(text => carStdata(text));
+        });
+
+        const carStdata = (stdata) => {
+            let trs = '';
+
+            console.log(stdata)
+            stdata.forEach((data, idx) => {
+                    vals1 = data.fields.name;
+                    vals2 = data.fields.phone;
+                    seq = '&nbsp' + (parseInt(data.pk));
+
+                    trs += '<div><span>';
+                    trs += vals1;
+                    trs += '</span>';
+                    trs += '<span class="ps-5>';
+                    trs += vals2;
+                    trs += '</span></div>';
+                });
+
+            console.log(trs);
+
+            // tb_Carst.innerHTML = ' ';
+            // tb_Carst.innerHTML = trs
+            $('#tb_Carst').html(trs);   // Jquery로 innerHTML
+
+            $('#car_station').modal('show');
+        };  // 가까운 검사소 찾기
+
+        {# 픽업예약 전송#}
+        {#btnRstvnApp.addEventListener('click', ()=>{});#}
+
 	</script>
 {% endblock %}
 </body>

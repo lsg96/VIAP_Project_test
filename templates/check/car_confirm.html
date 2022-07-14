@@ -1,10 +1,265 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 {% block content %}
- <div class="text-center ">
-      <img src="/static/imgs/confirm_cancle.PNG">
-      <img src="/static/imgs/confirm_cancle1.PNG">
 
-     </div>
+
+<div class="row  container mt-lg-5 d-flex justify-content-center">
+    <div class ="col-lg-7 col-sm-5 d-flex " >
+        <div class="row "  id="testInfo">
+            <div class="col-lg-12">
+                <div class="form-group position-relative">
+                    <label class="form-label"><span class="text-danger">*</span> 예약하신 자동차 번호</label>
+                    <div class="form-icon position-relative">
+                        <i class="mdi mdi-car-back icons"></i>
+                        <input type="text" id="carno" name="carno" class="form-control ps-5" placeholder="">
+                    </div>
+                    <div id="carnomsg" class="text-danger msgfs"></div>
+                </div>
+
+                <div class="form-group position-relative mt-3">
+                    <label class="form-label"><span class="text-danger">*</span> 예약확인 휴대전화 </label>
+                    <div class="form-icon position-relative">
+                        <i data-feather="hash" class="fea icon-sm icons"></i>
+                        <input type="text" id="tel" name="tel" class="form-control ps-5; "  maxlength="11" placeholder=" 예약확인 휴대전화 - 숫자만 입력해 주세요." >
+                    </div>
+                    <div class="text-danger"></div>
+                </div>
+
+                <div class="custom-control custom-switch mt-2">
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between mt-1">
+                            <div class="form-check form-switch">
+
+    {#          해당 예약이 없을시  에러메세지 띄우면될듯       <input type="checkbox" class="form-check-input mk" id="testInfoSwitch" onclick="agreeTerm.testInfoChk();">#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-0  mt-2">
+                    <a href="#" id="bkInfo" class="btn btn-primary shadow-none w-100">
+                        <i data-feather="search" class="fea icon-sm" data-bs-toggle="modal" data-bs-target="#bkmodal"> 예약정보 찾기</i> </a>
+                </div>
+            </div>
+        </div><!-- 자동차정보 END	-->
+    </div>
+<!------------------------------------------------------>
+    <div class="col-lg-5">
+        <div id="googleMap" style="width: 500px; height: 500px; border: 1px solid black"></div>
+        <div style="text-align: center; margin-top: 5px">
+            <a href="/check/car_check/?rgn=서울" type="button" id="seoulbtn" class="btn btn-success">서울</a>
+            <a href="/check/car_check/?rgn=경기" type="button" id="gyeonggibtn" class="btn btn-success">경기</a>
+            <a href="/check/car_check/?rgn=인천" type="button" id="incheonbtn" class="btn btn-success">인천</a>
+            <a href="/check/car_check/?rgn=부산" type="button" id="busanbtn" class="btn btn-success">부산</a>
+            <button type="button" id="checkbtn" class="btn btn-primary">내위치확인</button>
+        </div>
+    </div>
+</div>
+    <div id="bkmodal" class="modal" data-bs-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">예약 확인</h5>
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal" >닫기</button>
+<!--                      aria-label="Close"//시각장애인한테 글자 읽어줄수 있게 만들어주는 기능-->
+          </div>
+
+          <div class="modal-body">
+            <div class="row mb-3">
+                <label for="mname" class="col-form-label col-3 text-end ">이름</label>
+                <div class="col-8">
+                    <p id="mname" class="col-form-label col-auto "style="border-bottom: 1px solid black"> </p>
+                </div>
+            </div><!--username-->
+
+            <div class="row mb-3">
+                <label for="mcarno" class="col-form-label col-3 text-end ">차량번호</label>
+                <div class="col-8">
+                    <p id="mcarno" class="col-form-label col-auto "style="border-bottom: 1px solid black">  </p>
+                </div>
+            </div><!--carnum-->
+
+            <div class="row mb-3">
+                <label for="mtel" class="col-form-label col-3 text-end ">핸드폰번호</label>
+                <div class="col-8">
+                    <p id="mtel" class="col-form-label col-auto "style="border-bottom: 1px solid black">  </p>
+                </div>
+            </div><!--phonenum-->
+
+            <div class="row mb-3">
+                <label for="magent" class="col-form-label col-3 text-end ">검사대행원</label>
+                <div class="col-8">
+                    <p id="magent" class="col-form-label col-auto "style="border-bottom: 1px solid black">  </p>
+                </div>
+            </div><!--carcenter-->
+
+            <div class="row mb-3">
+                <label for="mdate" class="col-form-label col-3 text-end ">예약일</label>
+                <div class="col-8">
+                    <p id="mdate" class="col-form-label col-auto "style="border-bottom: 1px solid black">  </p>
+                </div>
+            </div><!--regdate-->
+          </div>
+        </div>
+      </div>
+    </div>
+ </div>
+{% endblock %}
+{% block script %}
+    <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }  // crsf_token 쿠키
+
+        const bkInfo = document.querySelector('#bkInfo');
+        const carno = document.querySelector('#carno');
+        const tel = document.querySelector('#tel');
+
+        const mname = document.querySelector('#mname');
+        const mcarno = document.querySelector('#mname');
+        const magent = document.querySelector('#mname');
+        const mtel = document.querySelector('#mname');
+        const mdate = document.querySelector('#mname');
+
+        bkInfo.addEventListener('click', ()=>{
+            const csrftoken = getCookie('csrftoken');
+            console.log(csrftoken);
+            console.log(expdate);
+
+            fetch('{% url "car_confirm" %}', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ap_carno: carno.value,
+                    ap_tel: tel.tel,
+                }),
+            }).then(response => response.json())
+                .then(text => conformMd(text))
+            .catch((error) => {
+                    console.error('실패:', error);
+            });
+
+            $('#bkmodal').modal('show');
+        });
+
+    </script>
+    <script>
+        var map;
+        var btnName;
+        var busanbtn = document.getElementById('busanbtn');
+        busanbtn.addEventListener('click', changeToBusan);
+
+        var seoulbtn = document.getElementById('seoulbtn');
+        seoulbtn.addEventListener('click', changeToSeoul);
+
+        var gyeonggibtn = document.getElementById('gyeonggibtn');
+        gyeonggibtn.addEventListener('click', changeToGyeonggi);
+
+        var incheonbtn = document.getElementById('incheonbtn');
+        incheonbtn.addEventListener('click', changeToIncheon);
+
+        var checkbtn = document.getElementById('checkbtn');
+        checkbtn.addEventListener('click', locationTest);
+
+        var locations = {{ locations|safe }};
+        var marker,i;
+
+        var adr = document.location.href;
+
+        function testt(callback){
+        // 마커 표시 및 마커 클릭 이벤트 설정
+            for (i = 0; i < locations.length; i++){
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1],locations[i][2]),
+                    map:map,
+                })
+                google.maps.event.addListener(marker,'click',(function(marker,i){
+                    return function(){
+                        alert('업체명 : ' + locations[i][0]+'\n'+'주소 : '+locations[i][4]+'\n'+'전화번호 : '+locations[i][5]);
+                    }
+                })(marker,i))
+            }
+        }
+        // 내위치확인
+        function locationTest(){
+            navigator.geolocation.getCurrentPosition(handleLocation, handleError);
+            }
+        // 위치 콜백
+        function handleLocation(position){
+            // 위치정보 만들고
+            var latlng = new google.maps.LatLng(position.coords.latitude,
+                position.coords.longitude);
+                map.panTo(latlng);
+                map.setZoom(12);
+        }
+       // 에러콜백
+        function handleError(err) {var outDiv = document.getElementById("googleMap");
+            if(err.code == 1) {outDiv.innerHTML = "사용자가 위치정보 공유를 거부함";}
+            else {outDiv.innerHTML = "에러발생 : " + err.code;}
+        };
+
+        function myMap(){
+            // 서울
+            if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%84%9C%EC%9A%B8"){
+                    mapOptions = {
+                    center:new google.maps.LatLng(37.5666805, 126.9784147),
+                    zoom:12
+            // 경기
+            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EA%B2%BD%EA%B8%B0"){
+                    mapOptions = {
+                    center:new google.maps.LatLng(37.5666805, 126.9784147),
+                    zoom:10
+            // 인천
+            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%9D%B8%EC%B2%9C"){
+                    mapOptions = {
+                    center: new google.maps.LatLng(37.4562557, 126.7052062),
+                    zoom: 12
+            // 부산
+            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EB%B6%80%EC%82%B0"){
+                mapOptions = {
+                    center: new google.maps.LatLng(35.1795543, 129.0756416),
+                    zoom: 12
+            // 그 외 서울고정
+            }} else {
+                    mapOptions = {
+                    center:new google.maps.LatLng(37.5666805, 126.9784147),
+                    zoom:10
+            }}
+            map = new google.maps.Map(
+                 document.getElementById("googleMap")
+                , mapOptions )
+            testt()
+            }
+
+        function changeToSeoul() {
+            testt()
+        }
+        function changeToBusan() {
+
+           testt()
+        }
+        function changeToGyeonggi() {
+
+           testt()
+        }
+        function changeToIncheon() {
+
+           testt()
+        }
+    </script>  // 지도 스크립트
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00YznqL7pofuUfsPeaWI3JSwA33ftGvY&callback=myMap&region=kr"></script>
 {% endblock %}
 
