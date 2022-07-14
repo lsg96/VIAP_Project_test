@@ -38,7 +38,20 @@ class Car_confirmView(View):
         return render(request, 'check/car_confirm.html')
 
     def post(self, request):
-        pass
+        form = json.loads(request.body)
+        print(form)
+
+        a = ApplyUser.objects.select_related().get(carno=form['ap_carno'], apptel=form['ap_tel'])
+        # a = ApplyUser.objects.select_related().select_related().get(carno=form['ap_carno'])
+        print(a)
+        context = {'ap': a}
+        print(context)
+        # contexpt = {'name': a.appname, 'carno': a.carno, 'tel':a.apptel, 'date':a.pdate}
+        # context = {'name': a.appname, 'carno': a.carno, 'agent':a.agentname, 'tel':a.apptel, 'date':a.pdate}
+        # print(context)
+        # context = {'name': a.appname, 'carno': a.carno, 'tel': a.apptel, 'date': a.pdate}
+
+        return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 class PickupView(View):
@@ -161,8 +174,6 @@ def carInfoSearch(request):
         # carno = '28어2384'
         # bymd = '960324'
 
-
-
         i = insptype.text
         f = fdate.text
         e = edate.text
@@ -194,8 +205,6 @@ class Car_infoView(View):
         print(form)
 
         isError = 'N'
-
-
         # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
 
         carno = '28어8354'

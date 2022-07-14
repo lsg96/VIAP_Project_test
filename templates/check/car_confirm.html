@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 <div class="row  container mt-lg-5 d-flex justify-content-center">
     <div class ="col-lg-7 col-sm-5 d-flex " >
         <div class="row "  id="testInfo">
@@ -127,139 +126,158 @@
         const bkInfo = document.querySelector('#bkInfo');
         const carno = document.querySelector('#carno');
         const tel = document.querySelector('#tel');
+        const bkmodal = document.querySelector('#bkmodal');
 
         const mname = document.querySelector('#mname');
-        const mcarno = document.querySelector('#mname');
-        const magent = document.querySelector('#mname');
-        const mtel = document.querySelector('#mname');
-        const mdate = document.querySelector('#mname');
+        const mcarno = document.querySelector('#mcarno');
+        const magent = document.querySelector('#magent');
+        const mtel = document.querySelector('#mtel');
+        const mdate = document.querySelector('#mdate');
 
         bkInfo.addEventListener('click', ()=>{
-            {#const csrftoken = getCookie('csrftoken');#}
-            {#console.log(csrftoken);#}
-            {#console.log(expdate);#}
-            {##}
-            {#fetch('{% url "car_confirm" %}', {#}
-            {#    method: 'POST',#}
-            {#    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },#}
-            {#    body: JSON.stringify({#}
-            {#        ap_carno: carno.value,#}
-            {#        ap_tel: tel.tel,#}
-            {#    }),#}
-            {#}).then(response => response.json())#}
-            {#    .then(text => conformMd(text))#}
-            {#.catch((error) => {#}
-            {#        console.error('실패:', error);#}
-            {#});#}
+            if (carno.value == '') {
+                alert('차량번호를 입력하세요!');
+                carno.focus();
+                return;
+            } else if (tel.value == '') {
+                alert('휴대폰 번호를 입력하세요!');
+                tel.focus();
+                return;
+            } else {
+                const csrftoken = getCookie('csrftoken');
+                console.log(csrftoken);
 
-            $('#bkmodal').modal('show');
+                fetch('{% url "car_confirm" %}', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ap_carno: carno.value,
+                        ap_tel: tel.value,
+                    }),
+                }).then(response => response.json())
+                    .then(text => conformMd(text))
+                .catch((error) => {
+                        console.error('실패:', error);
+                });
+            }
         });
 
-    </script>
-    <script>
-        var map;
-        var btnName;
-        var busanbtn = document.getElementById('busanbtn');
-        busanbtn.addEventListener('click', changeToBusan);
+        const conformMd = (tpdata) =>{
+            console.log(tpdata);
+            mname.innerHTML = tpdata.name;
+            mcarno.innerHTML = tpdata.carno;
+         //   magent.innerHTML = tpdata.agent;
+            mtel.innerHTML = tpdata.tel;
+            mdate.innerHTML = tpdata.date;
 
-        var seoulbtn = document.getElementById('seoulbtn');
-        seoulbtn.addEventListener('click', changeToSeoul);
-
-        var gyeonggibtn = document.getElementById('gyeonggibtn');
-        gyeonggibtn.addEventListener('click', changeToGyeonggi);
-
-        var incheonbtn = document.getElementById('incheonbtn');
-        incheonbtn.addEventListener('click', changeToIncheon);
-
-        var checkbtn = document.getElementById('checkbtn');
-        checkbtn.addEventListener('click', locationTest);
-
-        var locations = {{ locations|safe }};
-        var marker,i;
-
-        var adr = document.location.href;
-
-        function testt(callback){
-        // 마커 표시 및 마커 클릭 이벤트 설정
-            for (i = 0; i < locations.length; i++){
-                marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(locations[i][1],locations[i][2]),
-                    map:map,
-                })
-                google.maps.event.addListener(marker,'click',(function(marker,i){
-                    return function(){
-                        alert('업체명 : ' + locations[i][0]+'\n'+'주소 : '+locations[i][4]+'\n'+'전화번호 : '+locations[i][5]);
-                    }
-                })(marker,i))
-            }
-        }
-        // 내위치확인
-        function locationTest(){
-            navigator.geolocation.getCurrentPosition(handleLocation, handleError);
-            }
-        // 위치 콜백
-        function handleLocation(position){
-            // 위치정보 만들고
-            var latlng = new google.maps.LatLng(position.coords.latitude,
-                position.coords.longitude);
-                map.panTo(latlng);
-                map.setZoom(12);
-        }
-       // 에러콜백
-        function handleError(err) {var outDiv = document.getElementById("googleMap");
-            if(err.code == 1) {outDiv.innerHTML = "사용자가 위치정보 공유를 거부함";}
-            else {outDiv.innerHTML = "에러발생 : " + err.code;}
+            $('#car_station').modal('show');
+            $('#bkmodal').modal('show');
         };
-
-        function myMap(){
-            // 서울
-            if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%84%9C%EC%9A%B8"){
-                    mapOptions = {
-                    center:new google.maps.LatLng(37.5666805, 126.9784147),
-                    zoom:12
-            // 경기
-            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EA%B2%BD%EA%B8%B0"){
-                    mapOptions = {
-                    center:new google.maps.LatLng(37.5666805, 126.9784147),
-                    zoom:10
-            // 인천
-            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%9D%B8%EC%B2%9C"){
-                    mapOptions = {
-                    center: new google.maps.LatLng(37.4562557, 126.7052062),
-                    zoom: 12
-            // 부산
-            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EB%B6%80%EC%82%B0"){
-                mapOptions = {
-                    center: new google.maps.LatLng(35.1795543, 129.0756416),
-                    zoom: 12
-            // 그 외 서울고정
-            }} else {
-                    mapOptions = {
-                    center:new google.maps.LatLng(37.5666805, 126.9784147),
-                    zoom:10
-            }}
-            map = new google.maps.Map(
-                 document.getElementById("googleMap")
-                , mapOptions )
-            testt()
-            }
-
-        function changeToSeoul() {
-            testt()
-        }
-        function changeToBusan() {
-
-           testt()
-        }
-        function changeToGyeonggi() {
-
-           testt()
-        }
-        function changeToIncheon() {
-
-           testt()
-        }
-    </script>  // 지도 스크립트
+    </script>
+{#    <script>#}
+{#        var map;#}
+{#        var btnName;#}
+{#        var busanbtn = document.getElementById('busanbtn');#}
+{#        busanbtn.addEventListener('click', changeToBusan);#}
+{##}
+{#        var seoulbtn = document.getElementById('seoulbtn');#}
+{#        seoulbtn.addEventListener('click', changeToSeoul);#}
+{##}
+{#        var gyeonggibtn = document.getElementById('gyeonggibtn');#}
+{#        gyeonggibtn.addEventListener('click', changeToGyeonggi);#}
+{##}
+{#        var incheonbtn = document.getElementById('incheonbtn');#}
+{#        incheonbtn.addEventListener('click', changeToIncheon);#}
+{##}
+{#        var checkbtn = document.getElementById('checkbtn');#}
+{#        checkbtn.addEventListener('click', locationTest);#}
+{##}
+{#        var locations = {{ locations|safe }};#}
+{#        var marker,i;#}
+{##}
+{#        var adr = document.location.href;#}
+{##}
+{#        function testt(callback){#}
+{#        // 마커 표시 및 마커 클릭 이벤트 설정#}
+{#            for (i = 0; i < locations.length; i++){#}
+{#                marker = new google.maps.Marker({#}
+{#                    position: new google.maps.LatLng(locations[i][1],locations[i][2]),#}
+{#                    map:map,#}
+{#                })#}
+{#                google.maps.event.addListener(marker,'click',(function(marker,i){#}
+{#                    return function(){#}
+{#                        alert('업체명 : ' + locations[i][0]+'\n'+'주소 : '+locations[i][4]+'\n'+'전화번호 : '+locations[i][5]);#}
+{#                    }#}
+{#                })(marker,i))#}
+{#            }#}
+{#        }#}
+{#        // 내위치확인#}
+{#        function locationTest(){#}
+{#            navigator.geolocation.getCurrentPosition(handleLocation, handleError);#}
+{#            }#}
+{#        // 위치 콜백#}
+{#        function handleLocation(position){#}
+{#            // 위치정보 만들고#}
+{#            var latlng = new google.maps.LatLng(position.coords.latitude,#}
+{#                position.coords.longitude);#}
+{#                map.panTo(latlng);#}
+{#                map.setZoom(12);#}
+{#        }#}
+{#       // 에러콜백#}
+{#        function handleError(err) {var outDiv = document.getElementById("googleMap");#}
+{#            if(err.code == 1) {outDiv.innerHTML = "사용자가 위치정보 공유를 거부함";}#}
+{#            else {outDiv.innerHTML = "에러발생 : " + err.code;}#}
+{#        };#}
+{##}
+{#        function myMap(){#}
+{#            // 서울#}
+{#            if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%84%9C%EC%9A%B8"){#}
+{#                    mapOptions = {#}
+{#                    center:new google.maps.LatLng(37.5666805, 126.9784147),#}
+{#                    zoom:12#}
+{#            // 경기#}
+{#            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EA%B2%BD%EA%B8%B0"){#}
+{#                    mapOptions = {#}
+{#                    center:new google.maps.LatLng(37.5666805, 126.9784147),#}
+{#                    zoom:10#}
+{#            // 인천#}
+{#            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EC%9D%B8%EC%B2%9C"){#}
+{#                    mapOptions = {#}
+{#                    center: new google.maps.LatLng(37.4562557, 126.7052062),#}
+{#                    zoom: 12#}
+{#            // 부산#}
+{#            }} else if (adr == "http://127.0.0.1:8000/check/car_check/?rgn=%EB%B6%80%EC%82%B0"){#}
+{#                mapOptions = {#}
+{#                    center: new google.maps.LatLng(35.1795543, 129.0756416),#}
+{#                    zoom: 12#}
+{#            // 그 외 서울고정#}
+{#            }} else {#}
+{#                    mapOptions = {#}
+{#                    center:new google.maps.LatLng(37.5666805, 126.9784147),#}
+{#                    zoom:10#}
+{#            }}#}
+{#            map = new google.maps.Map(#}
+{#                 document.getElementById("googleMap")#}
+{#                , mapOptions )#}
+{#            testt()#}
+{#            }#}
+{##}
+{#        function changeToSeoul() {#}
+{#            testt()#}
+{#        }#}
+{#        function changeToBusan() {#}
+{##}
+{#           testt()#}
+{#        }#}
+{#        function changeToGyeonggi() {#}
+{##}
+{#           testt()#}
+{#        }#}
+{#        function changeToIncheon() {#}
+{##}
+{#           testt()#}
+{#        }#}
+{#    </script>  // 지도 스크립트#}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00YznqL7pofuUfsPeaWI3JSwA33ftGvY&callback=myMap&region=kr"></script>
 {% endblock %}
 
