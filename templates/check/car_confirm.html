@@ -135,22 +135,22 @@
         const mdate = document.querySelector('#mname');
 
         bkInfo.addEventListener('click', ()=>{
-            const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken);
-            console.log(expdate);
-
-            fetch('{% url "car_confirm" %}', {
-                method: 'POST',
-                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ap_carno: carno.value,
-                    ap_tel: tel.tel,
-                }),
-            }).then(response => response.json())
-                .then(text => conformMd(text))
-            .catch((error) => {
-                    console.error('실패:', error);
-            });
+            {#const csrftoken = getCookie('csrftoken');#}
+            {#console.log(csrftoken);#}
+            {#console.log(expdate);#}
+            {##}
+            {#fetch('{% url "car_confirm" %}', {#}
+            {#    method: 'POST',#}
+            {#    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },#}
+            {#    body: JSON.stringify({#}
+            {#        ap_carno: carno.value,#}
+            {#        ap_tel: tel.tel,#}
+            {#    }),#}
+            {#}).then(response => response.json())#}
+            {#    .then(text => conformMd(text))#}
+            {#.catch((error) => {#}
+            {#        console.error('실패:', error);#}
+            {#});#}
 
             $('#bkmodal').modal('show');
         });
