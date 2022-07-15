@@ -39,20 +39,20 @@ class Car_confirmView(View):
 
     def post(self, request):
         form = json.loads(request.body)
-        print(form)
+        # print(form)
+        isError = 'N'
+        isExist = ApplyUser.objects.filter(carno=form['ap_carno'], apptel=form['ap_tel']).exists()
 
-        a = ApplyUser.objects.select_related().get(carno=form['ap_carno'], apptel=form['ap_tel'])
-        # a = ApplyUser.objects.select_related().select_related().get(carno=form['ap_carno'])
-        print(a)
-        context = {'ap': a}
-        print(context)
-        # contexpt = {'name': a.appname, 'carno': a.carno, 'tel':a.apptel, 'date':a.pdate}
-        # context = {'name': a.appname, 'carno': a.carno, 'agent':a.agentname, 'tel':a.apptel, 'date':a.pdate}
-        # print(context)
-        # context = {'name': a.appname, 'carno': a.carno, 'tel': a.apptel, 'date': a.pdate}
+        if isExist:
+            a = ApplyUser.objects.select_related().select_related().get(carno=form['ap_carno'], apptel=form['ap_tel'])
+            # print(a.appid.pdate, '/', a.appid.agid.agentname)
+
+            context = {'name': a.appname, 'carno': a.carno, 'agent':a.appid.agid.agentname, 'tel':a.apptel, 'date':a.appid.pdate, 'isError':isError}
+
+        else:
+            context = {'isError':'Y'}
 
         return HttpResponse(json.dumps(context), content_type='application/json')
-
 
 class PickupView(View):
     def get(self, request):
@@ -60,24 +60,18 @@ class PickupView(View):
 
     def post(self, request):
         # json으로 넘겨서 json으로 받아야 함
-        form = json.loads(request.body)
+        # form = json.loads(request.body)
         print('ppp', )
-        print(form)
-
+        insptype = ''
         isError = 'N'
-        try:
-            carno = form['cn']
-            bymd = form['birth']
-        except:
-            isError = 'Y'
+        chk = 'p'
+
+        carno, insptype, fdate, edate, carname, sido, gugun, isError = carInfoSearch(request, chk)
 
         if isError == 'Y':
-            return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
+            isError = {'isError': 'Y'}
+            return HttpResponse(json.dumps(isError), content_type='application/json')
         elif isError == 'N':
-            # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request.body)
-
-            # insptype = 'Y'
-            carno = '28어8354'
             insptype = '종합검사'
             fdate = '2022-07-01'
             edate = '2022-09-01'
@@ -85,33 +79,34 @@ class PickupView(View):
             agentfee = '15000'
 
             if insptype == 'Y':
-                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate}
-
-            elif insptype == 'N':
-                pass
+                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'isError':isError}
             else:
                 # 검사료 조회: 차명이로 향후 배기량으로 설정
                 pf = InspFee.objects.get(insptype=insptype, carname=carname)
                 print(pf.fee)
                 # 검사대행원 매치
-                pa = Agent.objects.filter(sido=form['sido'], gugun=form['gugun'])
+                pa = Agent.objects.filter(sido=sido, gugun=gugun)
                 # print(pa[0].agentname)
                 json_pa = serializers.serialize('json', pa)
 
-                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'json_pa': json_pa}
+                context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'fee': pf.fee, 'agentfee': agentfee, 'json_pa': json_pa, 'isError':isError}
 
             print(context)
 
             return HttpResponse(json.dumps(context), content_type='application/json')
 
 
-def carInfoSearch(request):
+def carInfoSearch(request, chk):
     # form = request.GET.dict()
     form = json.loads(request.body)
+    print(form)
+
     isError = 'N';    carno = '';      bymd = ''
     f = '';    e = '';    i = '';    c = ''
+    insptype =  ''
     carno = form['carno']
     bymd = form['bymd']
+
     try:
         URL = 'https://www.cyberts.kr/cp/pvr/cpr/readCpPvrCarPrsecResveMainView.do'
 
@@ -162,24 +157,28 @@ def carInfoSearch(request):
 
             print(insptype.text, fdate.text, edate.text, carname.text)
 
+            i = insptype.text
+            f = fdate.text
+            e = edate.text
+            c = carname.text
+
         else:  # 차량 검사 일자가 아닐시
             fdate = driver.find_element(By.XPATH, f"/html/body/div[4]/div/div[2]/div[1]/div/span/span[1]")
             edate = driver.find_element(By.XPATH, f"/html/body/div[4]/div/div[2]/div[1]/div/span/span[2]")
+            f = fdate.text
+            e = edate.text
+            i = 'Y'
     except:
         isError = 'Y'
 
     print(carno, bymd)
 
-    if isError == 'N':
-        # carno = '28어2384'
-        # bymd = '960324'
-
-        i = insptype.text
-        f = fdate.text
-        e = edate.text
-        c = carname.text
-
-    return carno, i, f, e, c, isError
+    if chk == 'p':
+        sido = form['sido']
+        gugun = form['gugun']
+        return carno, i, f, e, c, sido, gugun, isError
+    else:
+        return carno, i, f, e, c, isError
 
 
 class Car_infoView(View):
@@ -199,25 +198,24 @@ class Car_infoView(View):
 
     def post(self, request):
         # json으로 넘겨서 json으로 받아야 함
-        form = json.loads(request.body)
+        # form = json.loads(request.body)
 
         print('aaa', )
-        print(form)
+        chk = 'i'
 
         isError = 'N'
-        # carno, insptype, fdate, edate, carname, isError = carInfoSearch(request)
+        carno, insptype, fdate, edate, carname, isError = carInfoSearch(request, chk)
 
-        carno = '28어8354'
-        insptype = 'Y'
         # insptype = '종합검사'
-        fdate = '2022-07-01'
-        edate = '2022-09-01'
-        carname = '아반떼'
+        # fdate = '2022-07-01'
+        # edate = '2022-09-01'
+        # carname = '아반떼'
 
         if isError == 'Y':
-            return HttpResponse(json.dumps("{'msg':'오류발생!!'}"), content_type='application/json')
+            isError = { 'isError': 'Y'}
+            return HttpResponse(json.dumps(isError), content_type='application/json')
         elif isError == 'N':
-            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname}
+            context = {'carno': carno, 'insptype': insptype, 'fdate': fdate, 'edate': edate, 'carname': carname, 'isError':isError}
             print(context)
 
             return HttpResponse(json.dumps(context), content_type='application/json')
@@ -260,7 +258,6 @@ class Car_applyView(View):
         print(ag)
 
         try:
-
             app = Apply(
                 appno=app_no,
                 insptype=form['app_insptype'],

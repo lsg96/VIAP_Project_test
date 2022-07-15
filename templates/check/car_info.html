@@ -164,15 +164,12 @@
 
                                 <div class="col-lg-12 mt-3 d-flex justify-content-center">
                                     <div>
-                                    <button type="button"
-                                        class="btn btn-success w-100"
-                                        id="btnschdate"
-                                        style="font-size: 13px"><i class="bi bi-search" style="font-size: 14px;"></i> 가까운 검사소 찾기 </button>
+                                        <button type="button" class="btn btn-success w-100" id="btnschdate"  style="font-size: 13px"><i class="bi bi-search" style="font-size: 14px;"></i> 가까운 검사소 찾기 </button>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- 픽업주소 END-->
-                </div><!--end row-->
+                    </div><!--end row-->
                     <div class="col-lg-4 col-md-5 col-12 mt-md-0 mt-sm-4">
                         <div class="sidebar sticky-bar">
                             <div class="border_bottom rounded border p-4 mb-4">
@@ -596,6 +593,7 @@
     </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <!-- javascript -->
     <script src="{% static '/js/jquery-3.4.1.min.js' %}"></script>
@@ -684,18 +682,23 @@
             const csrftoken = getCookie('csrftoken');
             console.log(csrftoken);
 
+            $('body').loading({
+                stoppable: true,
+                message: '검사정보 요청중입니다.<br/>잠시만 기다려주세요.',
+                theme: 'dark'
+            });
             // post 방식
             fetch('{% url "car_info" %}', {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cn:carno.value,
-                    birth:bymd.value,
+                    carno:carno.value,
+                    bymd:bymd.value,
                 }),
             }).then(response => response.json())
                 .then(text => tsCarInfo(text))
             .catch((error) => {
-            console.error('실패:', error);
+            console.log('실패:', error);
             });
 
 
@@ -708,83 +711,93 @@
 
         const tsCarInfo = (tsdata)=>{
             // tsdata = JSON.parse(tsdata)
-            console.log(tsdata)
-            console.log(tsdata.insptype)
-            if (tsdata.insptype == 'Y') {
-                let expdate = tsdata.fdate + '~' + tsdata.edate;
-                let fdate = tsdata.fdate;
-                //  console.log(tsdata)
+            console.log(tsdata);
+            console.log(tsdata.isError);
+            $('body').loading('stop');
 
-                carname_alt.innerHTML = carno.value;
-                expdate_alt.innerHTML = expdate;
-                alertdate_alt.innerHTML = fdate;
+            if (tsdata.isError === 'Y') {
+                alert('차량번호와 차량소유자 생년월일이 일치하지 않습니다!');
+                //return;
+            } else if (tsdata.isError === 'N') {
 
-                $('#register_alert').modal('show');
+                console.log(tsdata.isError)
 
-                const btnAlert = document.querySelector('#btnAlert');
-                const nameAlert = document.querySelector('#name_alert');
-                const tel1Alert = document.querySelector('#tel1_alert');
-                const submitAlertForm = document.querySelector('#submitAlertForm');
+                if (tsdata.insptype == 'Y') {
+                    console.log('kkkk')
+                    let expdate = tsdata.fdate + '~' + tsdata.edate;
+                    let fdate = tsdata.fdate;
+                    //  console.log(tsdata)
 
-                btnAlert.addEventListener('click',()=>{
-                    if (nameAlert.value == '') {
-                        alert('신청인 이름을 입력하세요!');
-                        nameAlert.focus();
-                        return;
-                    } else if (tel1Alert.value == '') {
-                        alert('휴대폰 번호를 입력하세요!');
-                        tel1Alert.focus();
-                        return;
-                    } else if (submitAlertForm.alertChk.checked == false) {
-                        alert('자동차검사안내에 대한 동의를 선택하세요!');
-                        return;
-                    } else {
-                        const csrftoken = getCookie('csrftoken');
-                        console.log(csrftoken);
-                        console.log(expdate);
+                    carname_alt.innerHTML = carno.value;
+                    expdate_alt.innerHTML = expdate;
+                    alertdate_alt.innerHTML = fdate;
 
-                        fetch('{% url "car_alert" %}', {
-                            method: 'POST',
-                            headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                at_carno: carno.value,
-                                at_expdate: expdate,
-                                at_name: nameAlert.value,
-                                at_tel1: tel1Alert.value,
-                            }),
-                        }).then(response => response.json())
-                            .then(text => conformRespMd(text))
-                        .catch((error) => {
-                                console.error('실패:', error);
-                        });
-                    }
-                });     // 검사알림 신청 전송
+                    $('#register_alert').modal('show');
 
-                const conformRespMd = (tpdata) => {
-                    console.log(tpdata.cfmchk)
-                    if (tpdata.cfmchk == 'Y') {
-                        alert('예약이 정상적으로 접수되었습니다')
-                        $('#register_alert').modal('hide');
-                        window.location.reload();
-                    } else {
-                        alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
-                    }
-                };   // 검사 알림 정상 여부
-            } else if (tsdata.insptype == 'N'){
-                $('#alert-message-modal').modal('show');
-            } else {
-                //  console.log(tsdata.insptype)
-                expdate = tsdata.fdate + '~' + tsdata.edate;
-                tsresult_car_name.innerHTML = tsdata.carname;
-                tsresult_test_type.innerHTML = tsdata.insptype;
-                tsresult_exp_date.innerHTML = expdate;
+                    const btnAlert = document.querySelector('#btnAlert');
+                    const nameAlert = document.querySelector('#name_alert');
+                    const tel1Alert = document.querySelector('#tel1_alert');
+                    const submitAlertForm = document.querySelector('#submitAlertForm');
 
-                tscarname = tsdata.carname;
-                tsinsptype = tsdata.insptype;
+                    btnAlert.addEventListener('click',()=>{
+                        if (nameAlert.value == '') {
+                            alert('신청인 이름을 입력하세요!');
+                            nameAlert.focus();
+                            return;
+                        } else if (tel1Alert.value == '') {
+                            alert('휴대폰 번호를 입력하세요!');
+                            tel1Alert.focus();
+                            return;
+                        } else if (submitAlertForm.alertChk.checked == false) {
+                            alert('자동차검사안내에 대한 동의를 선택하세요!');
+                            return;
+                        } else {
+                            const csrftoken = getCookie('csrftoken');
+                            console.log(csrftoken);
+                            console.log(expdate);
 
-                console.log(expdate)
+                            fetch('{% url "car_alert" %}', {
+                                method: 'POST',
+                                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    at_carno: carno.value,
+                                    at_expdate: expdate,
+                                    at_name: nameAlert.value,
+                                    at_tel1: tel1Alert.value,
+                                }),
+                            }).then(response => response.json())
+                                .then(text => conformRespMd(text))
+                            .catch((error) => {
+                                    console.error('실패:', error);
+                            });
+                        }
+                    });     // 검사알림 신청 전송
 
-                result_ts.setAttribute('style', 'display:block')
+                    const conformRespMd = (tpdata) => {
+                        console.log(tpdata.cfmchk)
+                        if (tpdata.cfmchk == 'Y') {
+                            alert('예약이 정상적으로 접수되었습니다')
+                            $('#register_alert').modal('hide');
+                            window.location.reload();
+                        } else {
+                            alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
+                        }
+                    };   // 검사 알림 정상 여부
+
+                } else {
+                    //  console.log(tsdata.insptype)
+                    expdate = tsdata.fdate + '~' + tsdata.edate;
+                    tsresult_car_name.innerHTML = tsdata.carname;
+                    tsresult_test_type.innerHTML = tsdata.insptype;
+                    tsresult_exp_date.innerHTML = expdate;
+
+                    tscarname = tsdata.carname;
+                    tsinsptype = tsdata.insptype;
+
+                    console.log(expdate);
+
+                    result_ts.setAttribute('style', 'display:block');
+                }
             }
          };     // 받은 차량정보에 따라 처리 알고리즘
 
@@ -801,25 +814,26 @@
         const tb_Carst = document.querySelector('#tb_Carst');
 
         btnschdate.addEventListener('click', ()=>{
-            console.log('kkk')
+            console.log('kkk');
             addrs = roadaddr.value.split(' ');
-            sido = addrs[0]
-            gugun = addrs[1]
-            ro = addrs[2]
+            sido = addrs[0];
+            gugun = addrs[1];
+            ro = addrs[2];
 
             let qry = '?sido=' + sido + '&gugun=' + gugun + '&ro=' + ro;
-            console.log(qry)
+            console.log(qry);
 
             fetch('{% url 'car_info' %}' + qry)
                 .then(response => response.json())
                 .then(text => carStdata(text));
+
         });
 
-        const carStdata = (stdata) => {
-            let trs = '';
+            const carStdata = (stdata) => {
+                let trs = '';
 
-            console.log(stdata)
-            stdata.forEach((data, idx) => {
+                console.log(stdata)
+                stdata.forEach((data, idx) => {
                     vals1 = data.fields.name;
                     vals2 = data.fields.phone;
                     seq = '&nbsp' + (parseInt(data.pk));
@@ -827,24 +841,20 @@
                     trs += '<div><span>';
                     trs += vals1;
                     trs += '</span>';
-                    trs += '<span class="ps-5>';
+                    trs += '<span class="ps-5">';
                     trs += vals2;
                     trs += '</span></div>';
                 });
 
-            console.log(trs);
+                console.log(trs);
 
-            // tb_Carst.innerHTML = ' ';
-            // tb_Carst.innerHTML = trs
-            $('#tb_Carst').html(trs);   // Jquery로 innerHTML
+                // tb_Carst.innerHTML = ' ';
+                // tb_Carst.innerHTML = trs
+                $('#tb_Carst').html(trs);   // Jquery로 innerHTML
 
-            $('#car_station').modal('show');
-        };  // 가까운 검사소 찾기
-
-        {# 픽업예약 전송#}
-        {#btnRstvnApp.addEventListener('click', ()=>{});#}
-
+                $('#car_station').modal('show');
+            };  // 가까운 검사소 찾기
+        //});
 	</script>
+
 {% endblock %}
-</body>
-</html>

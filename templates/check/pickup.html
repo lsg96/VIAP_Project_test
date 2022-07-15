@@ -1734,7 +1734,6 @@
 	<!-- Image Upload	-->
 	<script src="{% static '/js/Uploader/drop_uploader.js' %}"></script>
 
-
 	<script>
         // flatpickr
         flatpickr.localize(flatpickr.l10ns.ko);
@@ -1838,13 +1837,18 @@
             const csrftoken = getCookie('csrftoken');
             console.log(csrftoken);
 
+            $('body').loading({
+                stoppable: true,
+                message: '검사정보 요청중입니다.<br/>잠시만 기다려주세요.',
+                theme: 'dark'
+            });
             // post 방식
             fetch('{% url "pickup" %}', {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cn:carno.value,
-                    birth:bymd.value,
+                    carno:carno.value,
+                    bymd:bymd.value,
                     sido: sido,
                     gugun: gugun,
                     ro: ro,
@@ -1869,99 +1873,107 @@
             // tsdata = JSON.parse(tsdata)
             console.log(tsdata)
             console.log(tsdata.insptype)
-            if (tsdata.insptype == 'Y') {
-                expdate = tsdata.fdate + '~' + tsdata.edate;
-                let fdate = tsdata.fdate;
-                //  console.log(tsdata)
 
-                carname_alt.innerHTML = carno.value;
-                expdate_alt.innerHTML = expdate;
-                alertdate_alt.innerHTML = fdate;
+            $('body').loading('stop');
+            if (tsdata.isError === 'Y') {
+                alert('차량번호와 차량소유자 생년월일이 일치하지 않습니다!');
+                //return;
+            } else if (tsdata.isError === 'N') {
+                if (tsdata.insptype == 'Y') {
+                    expdate = tsdata.fdate + '~' + tsdata.edate;
+                    let fdate = tsdata.fdate;
+                    //  console.log(tsdata)
 
-                $('#register_alert').modal('show');
+                    carname_alt.innerHTML = carno.value;
+                    expdate_alt.innerHTML = expdate;
+                    alertdate_alt.innerHTML = fdate;
 
-                const btnAlert = document.querySelector('#btnAlert');
-                const nameAlert = document.querySelector('#name_alert');
-                const tel1Alert = document.querySelector('#tel1_alert');
-                const submitAlertForm = document.querySelector('#submitAlertForm');
+                    $('#register_alert').modal('show');
 
-                btnAlert.addEventListener('click',()=>{
-                    if (nameAlert.value == '') {
-                        alert('신청인 이름을 입력하세요!');
-                        nameAlert.focus();
-                        return;
-                    } else if (tel1Alert.value == '') {
-                        alert('휴대폰 번호를 입력하세요!');
-                        tel1Alert.focus();
-                        return;
-                    } else if (submitAlertForm.alertChk.checked == false) {
-                        alert('자동차검사안내에 대한 동의를 선택하세요!');
-                        return;
-                    } else {
-                        const csrftoken = getCookie('csrftoken');
-                        console.log(csrftoken);
-                        console.log(expdate);
+                    const btnAlert = document.querySelector('#btnAlert');
+                    const nameAlert = document.querySelector('#name_alert');
+                    const tel1Alert = document.querySelector('#tel1_alert');
+                    const submitAlertForm = document.querySelector('#submitAlertForm');
 
-                        fetch('{% url "car_alert" %}', {
-                            method: 'POST',
-                            headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                at_carno: carno.value,
-                                at_expdate: expdate,
-                                at_name: nameAlert.value,
-                                at_tel1: tel1Alert.value,
-                            }),
-                        }).then(response => response.json())
-                            .then(text => conformRespMd(text))
-                        .catch((error) => {
-                                console.error('실패:', error);
-                        });
-                    }
-                });     // 검사알림 신청 전송
+                    btnAlert.addEventListener('click',()=>{
+                        if (nameAlert.value == '') {
+                            alert('신청인 이름을 입력하세요!');
+                            nameAlert.focus();
+                            return;
+                        } else if (tel1Alert.value == '') {
+                            alert('휴대폰 번호를 입력하세요!');
+                            tel1Alert.focus();
+                            return;
+                        } else if (submitAlertForm.alertChk.checked == false) {
+                            alert('자동차검사안내에 대한 동의를 선택하세요!');
+                            return;
+                        } else {
+                            const csrftoken = getCookie('csrftoken');
+                            console.log(csrftoken);
+                            console.log(expdate);
 
-                const conformRespMd = (tpdata) => {
-                    console.log(tpdata.cfmchk)
-                    if (tpdata.cfmchk == 'Y') {
-                        alert('예약이 정상적으로 접수되었습니다')
-                        $('#register_alert').modal('hide');
-                        location.reload(true);
-                    } else {
-                        alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
-                    }
-                };   // 검사 알림 정상 여부
-            } else if (tsdata.insptype == 'N'){
-                $('#alert-message-modal').modal('show');
-            } else {
-                expdate = tsdata.fdate + '~' + tsdata.edate;
-                tsresult_car_name.innerHTML = tsdata.carname;
-                tsresult_test_type.innerHTML = tsdata.insptype;
-                tsresult_exp_date.innerHTML = expdate;
-                tsresultfee.innerHTML = tsdata.fee
-                tsresultagfee.innerHTML = tsdata.agentfee
-                tsresultpay.innerHTML = (parseInt(tsdata.fee) + parseInt(tsdata.agentfee)) * 1.1
+                            fetch('{% url "car_alert" %}', {
+                                method: 'POST',
+                                headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    at_carno: carno.value,
+                                    at_expdate: expdate,
+                                    at_name: nameAlert.value,
+                                    at_tel1: tel1Alert.value,
+                                }),
+                            }).then(response => response.json())
+                                .then(text => conformRespMd(text))
+                            .catch((error) => {
+                                    console.error('실패:', error);
+                            });
+                        }
 
-                tscarname = tsdata.carname;
-                tsinsptype = tsdata.insptype;
+                    });     // 검사알림 신청 전송
 
-                result_ts.setAttribute('style', 'display:block');
+                    const conformRespMd = (tpdata) => {
+                        console.log(tpdata.cfmchk)
+                        if (tpdata.cfmchk == 'Y') {
+                            alert('예약이 정상적으로 접수되었습니다')
+                            $('#register_alert').modal('hide');
+                            location.reload(true);
+                        } else {
+                            alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
+                        }
+                    };   // 검사 알림 정상 여부
+                } else if (tsdata.insptype == 'N'){
+                    $('#alert-message-modal').modal('show');
+                } else {
+                    expdate = tsdata.fdate + '~' + tsdata.edate;
+                    tsresult_car_name.innerHTML = tsdata.carname;
+                    tsresult_test_type.innerHTML = tsdata.insptype;
+                    tsresult_exp_date.innerHTML = expdate;
+                    tsresultfee.innerHTML = tsdata.fee
+                    tsresultagfee.innerHTML = tsdata.agentfee
+                    tsresultpay.innerHTML = (parseInt(tsdata.fee) + parseInt(tsdata.agentfee)) * 1.1
 
-                let opts = '';
-                let vals = '';
-                let seq = '';
+                    tscarname = tsdata.carname;
+                    tsinsptype = tsdata.insptype;
 
-                let agents = JSON.parse(tsdata.json_pa);
-                console.log(agents);
-                agents.forEach((data, idx) => {
-                    vals = data.fields.agentname;
-                    seq = '&nbsp' + (parseInt(data.pk) + 1);
+                    result_ts.setAttribute('style', 'display:block');
 
-                    opts += `<option value="${vals}${seq}">`;
-                    opts += vals;
-                    opts += '</option>';
-                });
-                opts = '<option selected class="form-control" value="">대행원을 선택하세요.</option>' + opts
-                console.log(opts)
-                agentlist.innerHTML = opts
+                    let opts = '';
+                    let vals = '';
+                    let seq = '';
+
+                    let agents = JSON.parse(tsdata.json_pa);
+                    console.log(agents);
+                    agents.forEach((data, idx) => {
+                        vals = data.fields.agentname;
+                        seq = '&nbsp' + (parseInt(data.pk) + 1);
+
+                        opts += `<option value="${vals}${seq}">`;
+                        opts += vals;
+                        opts += '</option>';
+                    });
+                    opts = '<option selected class="form-control" value="">대행원을 선택하세요.</option>' + opts
+                    console.log(opts)
+                    agentlist.innerHTML = opts
+                }
             }
          };     // 받은 차량정보에 따라 처리 알고리즘
 
@@ -2044,6 +2056,7 @@
             console.log(tpdata.cfmchk)
             if (tpdata.cfmchk == 'Y') {
                 alert('예약이 정상적으로 접수되었습니다')
+                 location.reload(true);
             } else {
                 alert('예약이 접수되지 않았습니다. 다시 접수해주세요요')
            }
